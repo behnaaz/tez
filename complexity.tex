@@ -1,0 +1,35 @@
+%Out of scope...
+%
+\section{Complexity}
+Analyzing the complexity of the calculations on CAP or other formal semantics of a Reo network in a formal fashion is beyond the scope of this dissertation. However, here we roughly estimate the time complexity of the product of CA. We have chosen CA because it is one of the most basic formal semantics for Reo. Calculating the complexity of CA product can provide an insight into the complexity of composing more sophisticated automata based semantics such as CAP.
+
+Let $R$ be a Reo network that is constructed by connecting $n$ smaller \\ networks in a step-wise fashion, meaning that one join occurs at a time, \\ $\mathcal{A}_{1..i-1}$ $=$ $($$Q_{1..i-1},\ $$ \mathcal{N}_{1..i-1},\ $$\rightarrow_{1..i-1},$$\ q_{0_{1..i-1}})$  be the CA of $R_{1..i-1}$ network at the $i$-th step before the $i$-th network is added, and
+$\mathcal{A}_{i}=\ (Q_{i},\ \mathcal{N}_{i},\ \rightarrow_{i},\ q_{0_{i}})$
+ be the CA of $R_i$, the $i$-th network. 
+ 
+Note that at the first step, only $A_1$ exists. At the second step $A_1$ is connected to $A_2$ to form $A_{1..2}$.
+
+Computing $\mathcal{A}_{1..i-1} \bowtie \mathcal{A}_i$ requires all transitions of $\mathcal{A}_{1..i-1}$, $t_{1..i-1}$, %$\longtransitionno{q}{N,g}{1..i-1}{p}$
+to be checked against the transitions of $\mathcal{A}_i$, $t_i$. %, $\longtransitionno{q}{N,g}{i}{p}$. 
+For each $t_i$, the common ports of the transition and $\mathcal{N}_{1..i-1}$ need to be found. The time complexity of this operation is $O(T_{1..i-1} \times P_{1..i-1} \times P_i)$, where $T_{1..i-1}$ is the number of transitions of $\mathcal{A}_{1..i-1}$, $P_{1..i-1}$, and $P_i$ are the number of elements in $\mathcal{N}_{1..i-1}$ and $\mathcal{N}_i$, respectively.  
+
+In addition, for the each $t_{1..i-1}$ all the common ports of the transition with $\mathcal{N}_i$ is calculated. With a similar complexity of $O(T_{i} \times P_{1..i-1} \times P_i)$, where $T_{i}$ is the number of transitions of $\mathcal{A}_{i}$. %, $M_{1..i-1}$, and $M_i$ are the number of elements in $\mathcal{N}_{1..i-1}$ and $\mathcal{N}_i$, respectively.  
+%These two operations are done in sequence, therefore their complexity needs to be added together in order  common ports on both 
+
+Based on the outcome of these operations, we may need to create a couple of new states by merging the source and target states of $t_{1..i-1}$ and $t_i$. We assume that the creating these states takes a constant time. This assumption is based on the fact that constraint automata states are atomic entities. 
+
+However, in the case of CASM, the time complexity of creating a new state in the product of two CASMs depends on the number of state variables. Without considering transition guards, the complexity of computing $\mathcal{A}_1..i$ is:
+$$O(T_{1..i-1} \times P_{1..i-1} \times P_i\ +\ T_{i} \times P_{1..i-1} \times P_i \ + \ T_{1..i-1} \times T_{i}) = $$
+$$O(\prod_{j=1}^{i-1} T_{j} \times \prod_{k=1}^{i} P_{k} \ +\ \prod_{l=1}^{i} P_{l} \times T_{i} \ + \ \prod_{m=1}^{i} T_{m}) $$
+%$$O(\mathcal{T}^{i-1} \times \mathcal{P}^i \ +\ \mathcal{P}^i \times T_{i} \ + \ \mathcal{T}^i) $$
+
+Assuming that the number of transitions and the port names in each $\mathcal{A}_i$ is $\mathcal{T}$ and  %,  $T_i=\mathcal{T}$
+%and that the $P_i=
+ $\mathcal{P}$, respectively,
+ %for $0 \le i \leq n$, 
+ the complexity can be written as $O(\mathcal{T}^{n} \times \mathcal{P}^n).$ As the formula shows the CA product is a very computationally expensive operation.  
+
+The problem of solving transition guards is a constraint satisfaction problem, which is a known NP-Complete problem. It is known that  verifying a solution to an NP-complete problem is possible in polynomial time, but the time to find the solutions increases rapidly by the growth in the size of constraints. 
+
+Later in this dissertation, we provide an alternative approach for obtaining the formal semantics of a Reo network using constraint solvers.
+Our approach enables us to benefit from all the advances in research to keep this problem tractable for practical use.

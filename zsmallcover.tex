@@ -1,0 +1,142 @@
+\documentclass[runnngheads]{book}
+\usepackage{graphicx}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{wrapfig,lipsum,booktabs}
+\usepackage{placeins}
+\usepackage{amssymb}
+\usepackage{upgreek}
+\usepackage{longtable}
+\usepackage{tikz}
+\usepackage{reo-tikz}
+\usetikzlibrary{shapes.geometric}
+\usepackage[linesnumbered,lined]{algorithm2e}
+\usepackage{pgfplots}
+\usepackage{titling}
+\usepackage{authblk}
+\usepackage{makecell}
+\usepackage{amsmath}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{array}
+\usepackage{floatrow}
+\floatsetup[table]{capposition=top}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{etex}
+\usepackage{lipsum}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{reo-tikz}
+\usepackage{tikz-bpmn}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{upgreek}
+\usepackage{romanbar}
+\usepackage{tabularx}
+\usepackage{color}
+\usepackage{placeins}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{dsfont}
+\usepackage{amsbsy}
+\usepackage{amstext}
+\usepackage{amscd}
+\usepackage{amsxtra}
+\usepackage{pgf}
+\usepackage{amsfonts, lacromay}
+\usetikzlibrary{chains, fit, shapes,matrix,decorations.shapes}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{syntax}
+\usepackage[english]{babel}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{shapes.geometric,positioning,calc,arrows,snakes}
+\usepackage{chngcntr}
+\usetikzlibrary{arrows,shadows} % for pgf-umlsd
+\usepackage{stmaryrd} %cross product
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{etoolbox}
+\floatstyle{plain}
+\floatname{program}{Listing}
+\usepackage{mathrsfs}
+\usepackage[underline=true,rounded corners=false]{pgf-umlsd}
+\usetikzlibrary{arrows, decorations.markings}
+\usetikzlibrary{shapes.geometric,calc}
+\usepackage{tikz}
+\usetikzlibrary{arrows, shapes, trees, positioning, decorations.markings, patterns}
+\usepackage{bpmn-events}
+\usepackage{bpmn-gateways}
+\usepackage{fancyvrb}
+\usepackage{multirow}
+\usepackage{textpos}
+\usepackage{caption}
+\usepackage{array}
+\usepackage{tikz,amsmath, amssymb,bm,color}
+\usetikzlibrary{circuits.logic.US,circuits.logic.IEC,fit}
+\newcommand\addvmargin[1]{
+  \node[fit=(current bounding box),inner ysep=#1,inner xsep=0]{};
+}
+\newtheorem{BehAxiom}{Axiom}[section]
+\newtheorem{BehExample}{Example}[section]
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newcounter{examplecounter}
+\newenvironment{BehExample3}{%\begin{quote}%
+\noindent
+ %   \refstepcounter{examplecounter}%
+  \textbf{Example \thechapter-\arabic{examplecounter}}%
+  \quad
+}{%
+}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%                                 % Insert 50pt (vertical) space
+  {\parindent \z@ \raggedright \normalfont         % No paragraph indent, ragged right
+    \ifnum \c@secnumdepth >\m@ne                   % If you should number chapters
+      \if@mainmatter                               % ... and you're in \mainmatter
+        \huge\bfseries \@chapapp\space \thechapter % huge, bold, Chapter + number
+        \par\nobreak                               % paragraph break without page break
+        \vskip 20\p@                               % Insert 20pt (vertical) space
+      \fi
+    \fi
+    \interlinepenalty\@M                           % Penalty
+    \Huge \bfseries #1\par\nobreak                 % Huge, bold chapter title
+    \vskip 40\p@                                   % Insert 40pt (vertical) space
+  }}
+\begin{document}
+%\pagenumbering{gobble}
+%%\begin{textblock*}{7.5in}(0pt,0pt)%
+%%\vspace{-5.5cm}\hspace*{-5cm}
+%%{\begin{center}\Huge{Constraint-Based Analysis of Business Process Models}\end{center}}
+%%\noindent\includegraphics*[height=33cm]{img/Bird}
+%%\begin{center}Behnaz Changizi\end{center}
+%%\end{textblock*}
+
+\begin{textblock*}{5.625in}(0pt,0pt)%
+{\begin{center}\Huge{Constraint-Based Analysis of Business Process Models}\end{center}}
+\vspace{2.5cm}\hspace*{.5cm}
+\noindent\includegraphics*[height=4in]{img/kuchulu}
+\\
+\begin{center}Behnaz Changizi\end{center}
+\end{textblock*}
+
+\newpage
+%\begin{textblock*}{7.5in}(0pt,0pt)%
+%\vspace{-5.5cm}\hspace*{-7.5cm}
+%\noindent\includegraphics*[height=35cm]{img/back}
+%\end{textblock*}
+
+\end{document}

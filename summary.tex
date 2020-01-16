@@ -1,0 +1,27 @@
+\newpage
+{\textbf{\Large{Summary}}}
+\vspace*{1cm}
+\\
+
+ Business process management is an operational management 
+approach that focuses on improving business processes. Business processes, i.e., collections of important activities in an organization, are 
+represented in the form of a workflow, an orchestrated and repeatable 
+pattern of activities amenable to automated analysis and control. 
+
+Business Process Model and Notation (BPMN) has become the de-facto standard for business processes diagrams. In order to provide tools support to analyze the behavior of a BPMN model, in this dissertation, we present a mapping of BPMN models to Reo networks. The Reo coordination language is an exogenous coordination language that
+realizes the coordination patterns in terms of its complex networks, that are built out of simple
+primitives called channels.  The mapping of BPMN to Reo is implemented as a plugin in the Reo analysis tool-set in a model-driven paradigm. Our mapping covers not only basic BPMN constructs but also advanced structures such as BPMN transactions. 
+
+Reo is easily extensible to support more advanced process models by defining new channels. 
+However, the open-ended nature of Reo channels makes it necessary to extend the formal semantics of Reo in order to include some new concepts. 
+
+Several dozen variations of semantic models for Reo have been proposed that vary from rather simple that cover basic Reo behavior to more complex models that capture specific behavioral aspects, e.g., context-sensitivity.  In some of these semantic models, computing the overall semantics of a system given  semantics for its parts is computationally expensive. This hampers using the language for analyzing large real-world business processes. 
+
+In this dissertation, we present a constraint-based framework, which unifies various formal semantics of Reo. In this framework, the behavior of a Reo network is described using constraints. The constraint-based nature of our approach allows  the simultaneous coexistence of several semantics in a simple fashion. The behavior of a Reo network is determined by the solutions to these constraints. Since any solution should satisfy all the encoded formal semantics, the framework eliminated any inconsistent behavior between the Reo formal semantics.
+
+Another advantage of our proposed constraint-based approach compared to the existing approaches of calculating formal semantics of Reo is its efficiency due to efficient constraint solving methods and optimization techniques that are used in the off-the-shelf constraint solvers. We back up this claim with a case study.
+
+Among the behavioral aspects required to model a business process is {priority}. The notion of priority is necessary for modeling behaviors such as transaction and exception handling, where the data flow representing the error or exception should interrupt the normal flow. 
+
+In this dissertation, we present an alternative approach to model priority in Reo by extending our constraint-based framework with priority-aware premises. Further, we extend our priority-aware formal model to support not only a binary notion of priority, but also numeric priorities. 
+

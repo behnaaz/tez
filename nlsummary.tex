@@ -1,0 +1,22 @@
+{\textbf{\Large{Samenvatting (Dutch Summary)}}}
+\vspace*{1cm}
+\\
+
+Bedrijfsprocesbeheer is een operationele managementaanpak die zich richt op het verbeteren van bedrijfsprocessen. Bedrijfsprocessen, d.w.z. verzamelingen van belangrijke activiteiten in een organisatie, worden weergegeven in de vorm van een workflow, een georkestreerd en herhalend patroon van activiteiten die geschikt zijn voor geautomatiseerde analyse en controle. 
+
+Business Process Model and Notation (BPMN) is de algemene standaard geworden voor bedrijfsprocesdiagrammen. 
+Om ondersteunening in het analyseren van het gedrag van een BPMN-model,
+presenteren we in dit proefschrift een vertaling van BPMN-modellen naar Reo-netwerken. De Reo-coördinatietaal is een exogene coördinatietaal die de coördinatiepatronen opnieuw benoemt in termen van complexe netwerken, die zijn opgebouwd uit simpele primitieven genaamd channels. De vertaling van BPMN naar Reo is geïmplementeerd als een Reo-analysetool in een modelgedreven paradigma. Onze vertaling omvat niet alleen standaard BPMN-constructies, maar ook geavanceerde structuren zoals BPMN-transacties. 
+
+Reo is eenvoudig uitbreidbaar om meer geavanceerde procesmodellen te ondersteunen door het definiëren van nieuwe channels. Het flexibele karakter van Reo-kanalen maakt het echter noodzakelijk om de formele semantiek van Reo uit te breiden met een aantal nieuwe concepten. Verschillende variaties van semantische modellen voor Reo voorgesteld, varierend van vrij eenvoudig en die betrekking hebben op het basisgedrag van Reo, tot meer complexe modellen die specifieke gedragsaspecten vast leggen, bijvoorbeeld contextgevoeligheid. 
+
+In vele van deze semantische modellen is de berekening van de algehele semantiek van het systeem gegeven de semantiek van zijn onderdelen is rekenkundig duur. Dit bemoeilijkt het gebruik van de taal voor het analyseren van grote bedrijfsprocessen. In dit proefschrift presenteren we een op constraint-based framework dat verschillende formele semantiek van Reo. 
+
+In dit framework wordt het gedrag van een Reonetwork beschreven met het behulp van constraints. Onze constraint-based framework aanpak maakt gelijktijdige bestaan van verschillende semantiek op een eenvoudige manier mogelijk. Het gedrag van een Reo-netwerk wordt bepaald door de oplossingen voor deze constraints. Aangezien elke oplossing zou moeten voldoen aan alle gecodeerde formele semantiek, elimineerde het elk inconsistent gedrag tussen de Reo-formele semantieken. 
+
+Een ander voordeel van onze voorgestelde constraint-based benadering vergeleken met de bestaande benaderingen van het berekenen van de formele semantiek van Reo is de efficiëntie door efficiënte constraint-solving methoden en optimalisatietechnieken die worden gebruikt in de off-the-shelf constraint-solvers. We ondersteunen deze bewering met een casestudy. 
+
+Onder de gedragsaspecten die vereist zijn om een bedrijfsproces te modelleren, is prioriteit. Prioriteit is nodig voor het modelleren van gedrag zoals transactions en exception handling, waarbij de dataflow die de error of exception representeert de normale flow moet onderbreken. 
+
+In dit proefschrift presenteren we een alternatieve benadering om prioriteit te modelen in Reo door onze framework uit te breiden met prioriteit. Bovendien breiden we ons prioriteitsbewust formele model uit om niet alleen binaire prioriteit, maar ook numerieke prioriteiten te ondersteunen.
+

@@ -1,0 +1,137 @@
+\begin{table}[t]
+\caption{Constraint encoding of Reo with priority} 
+\begin{tabular}{|p{16mm}|p{95mm}|}
+\hline
+Channel & Constraints \\  
+\hline
+ \tikz[trim left=.7mm]{
+   \begin{scope}[shift={(.3,0)}]
+ %prio
+          	   \node[point,label=left:$$] (A) {};
+           	   \node[point,right of=A,label=right:$$, node distance=1cm] (B) {};
+               \node[left of=A,label=left:$$, node distance=.2cm] (LA) {a};
+               \node[right of=B,label=right:$$, node distance=.2cm] (LB) {b};
+
+           	   \draw[sync] (A) -- (B);
+           	   \node[] at (.5,0) {$!$};
+               \end{scope}
+               }
+          &% \parbox{.75\columnwidth}{
+          $  \psi_{PrioSync}(a, b) :
+          (\tilde{a} \Leftrightarrow \tilde{b}) \wedge  \neg(a^{\triangleright} \wedge b^{\triangleright})$ $\color{black} \wedge a^{!^\bullet} \wedge b^{!^\bullet}$ \\
+           \hline %& \\ %} c^{!^\bullet}\ \vee\ k^{!^\bullet}) 
+    %BsSync  
+	\tikz[trim left=.6mm]{%blok
+       \begin{scope}[shift={(.3,-2)}]
+          	   \node[point,label=left:$$] (A) {};
+           	   \node[point,right of=A,label=right:$$, node distance=1cm] (B) {};
+                              \node[left of=A,label=left:$$, node distance=.2cm] (LA) {a};
+               \node[right of=B,label=right:$$, node distance=.2cm] (LB) {b};
+           	   \draw[sync] (A) -- (B);
+           	   \node[] at (.5,0) {$)$};
+               \end{scope}
+               } & \parbox{.75\columnwidth}{$  \psi_{BlkSrcSync}(a, b) : 
+               (\tilde{a} \Leftrightarrow \tilde{b}) \wedge \neg(a^{\triangleright} \wedge b^{\triangleright})$ $\color{black} \wedge \neg b^{!^\bullet}$} \\ \hline
+           	   %\\
+           	   %&\\
+%BkSync  
+		\tikz[trim left=.6mm]{%blok
+               \begin{scope}[shift={(.25,-2)}]
+          	   \node[point,label=left:$$] (A) {};
+           	   \node[point,right of=A,label=right:$$, node distance=1cm] (B) {};
+                              \node[left of=A,label=left:$$, node distance=.2cm] (LA) {a};
+               \node[right of=B,label=right:$$, node distance=.2cm] (LB) {b};
+           	   \draw[sync] (A) -- (B);
+           	   \node[] at (.5,0) {$($};
+               \end{scope}
+               }	     & \parbox{.75\columnwidth}{$ \psi_{BlkSnkSync}(a, b) : 
+               (\tilde{a} \Leftrightarrow \tilde{b})  \wedge \neg(a^{\triangleright} \wedge b^{\triangleright})$ $\color{black} \wedge \neg a^{!^\bullet}$} \\
+               %& \\
+               \hline
+           	   %&\\
+               %BSync 2way 
+		\tikz[trim left=.6mm]{%blok
+                       \begin{scope}[shift={(.25,0)}]
+          	   \node[point,label=left:$$] (A) {};
+           	   \node[point,right of=A,label=right:$$, node distance=1cm] (B) {};
+                              \node[left of=A,label=left:$$, node distance=.2cm] (LA) {a};
+               \node[right of=B,label=right:$$, node distance=.2cm] (LB) {b};
+           	   \draw[sync] (A) -- (B);
+           	   \node[] at (.5,0) {$)($};
+               \end{scope}
+               }	     & \parbox{.75\columnwidth}{$ \psi_{BlkSync}(a, b) : 
+               (\tilde{a} \Leftrightarrow \tilde{b}) \wedge \neg(a^{\triangleright} \wedge b^{\triangleright})$ $\color{black} \wedge \neg  a^{!^\bullet} \wedge \neg b^{!^\bullet}$} 
+           	   \\   %         	   &\\ 
+           	   \hline
+           	   &\\
+           	   %sync
+  		\tikz[trim left=1mm]{%blok
+                       \begin{scope}[shift={(.25,0)}]
+          	   \node[point,label=left:$$] (A) {};
+           	   \node[point,right of=A,label=right:$$, node distance=1cm] (B) {};
+                              \node[left of=A,label=left:$$, node distance=.2cm] (LA) {a};
+               \node[right of=B,label=right:$$, node distance=.2cm] (LB) {b};
+           	   \draw[sync] (A) -- (B);
+           	   \node[] at (.5,0) {};
+               \end{scope}
+               }  & \parbox{.75\columnwidth}{$ \psi_{Sync}(a, b) : 
+               (\tilde{a} \Leftrightarrow \tilde{b}) \wedge \neg(a^{\triangleright} \wedge b^{\triangleright})$  
+  $\color{black} \wedge ((\neg a^{!^\bullet} \wedge \neg a^{!^\circ} \wedge \neg b^{!^\bullet} \wedge \neg b^{!^\circ}) \vee (a^{!^\bullet} \wedge \neg b^{!^\bullet} \wedge b^{!^\circ}) \vee (\neg a^{!^\bullet} \wedge a^{!^\circ} \wedge b^{!^\bullet}))$}  \\
+             	   &\\
+  \hline
+             	   &\\
+	   %lossysync
+	    {\lossysyncab} & \parbox{.75\columnwidth}{$\psi_{LossySync}(a, b) :
+        \tilde{b} \Rightarrow \tilde{a} \wedge \neg a^{\triangleright} \wedge \neg \tilde{a} \Rightarrow b^{\triangleright} \wedge ((\neg a^{!^\bullet} \wedge \neg a^{!^\circ} \wedge \neg b^{!^\bullet} \wedge \neg b^{!^\circ}) \vee (a^{!^\bullet} \wedge \neg b^{!^\bullet} \wedge b^{!^\circ}) \vee (\neg a^{!^\bullet} \wedge a^{!^\circ} \wedge b^{!^\bullet}))$} \\
+                   	   &\\
+        \hline
+                   	   &\\
+           	   %syncdrain
+{\syncdrainab} & \parbox{.75\columnwidth}{$ \psi_{SyncDrain}(a_1, a_2) : 
+\tilde{a} \Leftrightarrow \tilde{b} \wedge \neg(a^{\triangleright} \wedge b^{\triangleright})  \color{black} \wedge ((\neg a^{!^\bullet} \wedge \neg a^{!^\circ} \wedge \neg b^{!^\bullet} \wedge \neg b^{!^\circ}) \vee (a^{!^\bullet} \wedge \neg b^{!^\bullet} \wedge b^{!^\circ}) \vee (\neg a^{!^\bullet} \wedge a^{!^\circ} \wedge b^{!^\bullet}))$} \\
+           	   &\\
+\hline
+           	   &\\
+  %syncspout
+% {\syncspout}& \parbox{.75\columnwidth}{$ \psi_{SyncSpout}(k_1, k_2, \mathcal{P}_{k_1}, \mathcal{P}_{k_2}) : \tilde{k}_1 \Leftrightarrow \tilde{k}_2 \wedge \neg(k^{{\downarrow}}_1 \wedge k^{{\downarrow}}_2) \wedge \tilde{k}_1 \Rightarrow (\hat{k}_1 \in \mathcal{P}_{k_1}(\hat{k}_1)) \wedge \tilde{k}_2 \Rightarrow (\hat{k}_2 \in \mathcal{P}_{k_2}(\hat{k}_2)) $} \\
+ {\asyncdrainab} & \parbox{.75\columnwidth}{$ \psi_{AsyncDrain}(a_1, a_2) : 
+ \tilde{a} \Rightarrow (\neg \tilde{b} \wedge b^{\triangleright}) \wedge \tilde{b} \Rightarrow (\neg \tilde{a} \wedge a^{\triangleright}) \wedge \neg a^{!^\bullet} \wedge \neg b^{!^\bullet}$} \\ 
+            	   &\\
+ \hline
+ %asyncspout
+%  {\asyncspout} & \parbox{.75\columnwidth}{$ \psi_{AsyncSpout}(k_1, k_2) : \tilde{k}_1 \Rightarrow (k_{1}^{\downarrow} \neg \tilde{k}_2 \wedge \hat{k}_1 \in \mathcal{P}_{k_1}) \wedge \tilde{k}_2 \Rightarrow (k_{2}^{\downarrow} \wedge \neg \tilde{k}_1 \wedge \hat{k}_2 \in \mathcal{P}_{k_2})$} \\ %\\
+%filter
+ % {\filterwithpredicateab} & \parbox{.75\columnwidth}{$\psi_{Filter}(a, b, P) = (\tilde{b} \Rightarrow (\tilde{a} \wedge \hat{a} \in dom(P) \wedge P(\hat{a}))) \wedge (\tilde{b} \Rightarrow (\hat{a}=\hat{b})) \wedge %reason 
+  % (\neg \tilde{a} \Rightarrow (\neg a^{c^\triangleright} \Leftrightarrow b^{k^\triangleright})) \wedge
+  % (\tilde{a} \wedge \neg \tilde{b} \Rightarrow b^{k^\triangleright}) \wedge ((\neg a^{!^\bullet} \wedge \neg a^{!^\circ} \wedge \neg b^{!^\bullet} \wedge \neg b^{!^\circ}) \vee (a^{!^\bullet} \wedge \neg b^{!^\bullet} \wedge b^{!^\circ}) \vee (\neg a^{!^\bullet} \wedge a^{!^\circ} \wedge b^{!^\bullet}))$} \\ %\\
+% {\transformerwithfunctionab} & \parbox{.75\columnwidth}{$ \psi_{Transformer}(a, b, f) = (\tilde{b} \Rightarrow (\tilde{a} \wedge \hat{a} \in  dom(f))) \wedge (\tilde{b} \Rightarrow (\hat{b}=f(\hat{a}))) \wedge %reason
+% \neg (a^{c^\triangleright} \wedge b^{k^\triangleright}) \wedge ((\neg a^{!^\bullet} \wedge \neg a^{!^\circ} \wedge \neg b^{!^\bullet} \wedge \neg b^{!^\circ}) \vee (a^{!^\bullet} \wedge \neg b^{!^\bullet} \wedge b^{!^\circ}) \vee (\neg a^{!^\bullet} \wedge a^{!^\circ} \wedge b^{!^\bullet}))$} \\ 
+ %fifo
+            	   &\\
+ {\fifoab} & \parbox{.75\columnwidth}{$ \psi_{FIFO_{1}}(a, b, m) :
+ (\tilde{a} \Rightarrow \neg \mathring{m} \wedge \mathring{m}') \wedge (\tilde{b} \Rightarrow \mathring{m} \wedge \neg \mathring{m}') \wedge (\neg \tilde{a} \wedge \neg \tilde{b}) \Rightarrow (\mathring{m} \Leftrightarrow \mathring{m}') \wedge %reasin
+(\neg \mathring{m} \Rightarrow b^{\triangleright}) \wedge (\mathring{m} \Rightarrow a^{\triangleright}) \wedge (\neg a^{!^\bullet} \wedge \neg b^{!^\bullet})
+ $} \\            	   &\\ \hline
+ %fullfifo\\
+ % {\fifofull} & \parbox{.75\columnwidth}{Same as empty $FIFO_1$ only that $\mathring{m} = \top$} \\ 
+             	   &\\
+  \raisebox{2mm} {\mergerNodeNamedabc} &  \parbox{.75\columnwidth}{$\psi_{Merger}(a, b, c) : 
+ (\tilde{a} \vee \tilde{b}) \Rightarrow \tilde{c} \wedge \neg(\tilde{a} \wedge \tilde{b}) \wedge \neg \tilde{c} \Rightarrow ((\neg c^{\triangleright}  \wedge a^{\triangleright}) \vee (c^{\triangleright} \wedge \neg a^{\triangleright} \wedge b^{\triangleright}) \vee (c^{\triangleright} \wedge \neg b^{\triangleright} 
+ \wedge a^{\triangleright})) \wedge b^{\triangleright})) \wedge (c^{!^\circ} \wedge \neg c^{!^\bullet} \Rightarrow (a^{!^\bullet} \wedge b^{!^\bullet})) \wedge (\neg a^{!^\bullet} \wedge b^{!^\bullet} \wedge (a^{!^\circ} \vee b^{!^\circ}) \Rightarrow c^{!^\bullet})$}\\            	   &\\ \hline 
+            	   &\\
+ {\replicatorNodeNamedabc} & \parbox{.75\columnwidth}{$\psi_{Replicator}(a, b, c) : 
+ \tilde{a} \Leftrightarrow (\tilde{b} \wedge \tilde{c}) \wedge \neg \tilde{a} \Rightarrow ((\neg a^{\triangleright} \wedge b^{\triangleright}) \vee (\neg b^{\triangleright} \wedge c^{\triangleright}) \vee (\neg c^{\triangleright} \wedge b^{\triangleright} \wedge a^{\triangleright})) \wedge c^{\triangleright} \wedge a^{\triangleright})) \wedge (a^{!^\circ} \wedge \neg a^{!^\bullet} \Rightarrow (b^{!^\bullet} \wedge c^{!^\bullet})) \wedge (\neg b^{!^\bullet} \wedge c^{!^\bullet} \wedge (b^{!^\circ} \vee c^{!^\circ}) \Rightarrow a^{!^\bullet})
+$} \\            	   &\\ \hline 
+            	   &\\
+ \raisebox{2mm} {\routerNodeabc}&\parbox{.75\columnwidth}{$\psi_{Router}(a, b, c) : 
+ \tilde{a} \Leftrightarrow (\tilde{b} \vee \tilde{c}) \wedge \neg (\tilde{b} \wedge \tilde{c}) \wedge %reason
+ \tilde{a} \Leftrightarrow (\neg a^{\triangleright} \vee \neg (b^{\triangleright} \vee c^{\triangleright})) \wedge (a^{!^\circ} \wedge \neg a^{!^\bullet} \Rightarrow (b^{!^\bullet} \wedge c^{!^\bullet})) \wedge (\neg b^{!^\bullet} \wedge c^{!^\bullet} \wedge (b^{!^\circ} \vee c^{!^\circ}) \Rightarrow a^{!^\bullet})
+$}\\            	   &\\ \hline
+\end{tabular} 
+%\caption{Constraint encoding of Reo channels and nodes} 
+\label{tab:contextencodingprioadded2}
+%\end{longtable}
+\end{table}
+%\end{wraptable}
+%\end{center}
+\FloatBarrier

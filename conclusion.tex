@@ -1,0 +1,49 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+Despite long-term efforts, analyzing business processes is still a challenge. 
+%e long-term efforts, analyzing business processes is still a challenge. 
+%%Despite long-term efforts, analyzing business processes is still a challenge. 
+%%%%%%%%%%%Despite long-term efforts, analyzing business processes is still a challenge. 
+%%%Despite long-terrts, analyzing business processes is still a challenge. 
+%%Despite lon, analyzing business processes is still a challenge. 
+Creating tools for analyzing business processes requires expressing the behavior of the processes in an accurate way. Most of the business process management notations, particularly Business Process Model and Notation (BPMN), are based on Petri nets. 
+
+While Petri nets can be used to automate process analysis, they are not compositional. This makes analyzing the behavior of large and complex models based on Petri nets challenging. %Moreover, the classical Petri nets are not expressive enough and often are extended (e.g., with colors, reset and inhibitor arcs, priority transitions) to enable meaningful process analysis. Such extensions change the operational semantics of the model and generate incompatible dialects of process-specification languages adopted by various tools. 
+
+The Reo coordination language is an alternative theory to Petri nets that has been used to formalize semantics of BPMN. Reo has a compositional nature, which enables adding semantic models for individual components to the semantic models of existing processes. %This enables analyzing bigger models as by adding a new component, the semantics of the whole model does not need to be recalculated.   
+
+In this dissertation, we used the Reo coordination language to capture behavior of BPMN processes.  
+We presented an automated mapping of business process models expressed in BPMN 2 to Reo networks in order to create the possibility of using various types of analysis on business process models. Our mapping takes data into account. Thus, it enables verification of  data flow.  
+ We not only deal with basic BPMN 2 constructs, but also with compound elements such as transactions and exception handling. Formalizing the behavior of these elements requires modeling priority. %This is needed to privilege paths created to exceptions and errors over normal paths. 
+
+Reo is an extensible language that comes with various formal semantic models. This makes it possible to perform different kinds of analysis by focusing on specific behavioral aspects of a given network. However, there is a gap between the behavior that each of the semantics can express. This can introduce inconsistency among these operational models. In addition, these formal semantics are computed using their own specialized algorithms, which are directly implemented. % on top of Reo model.  
+
+Such algorithms are computationally expensive. As a result, the Reo models (and consequently business models) whose operational semantics can be efficiently calculated are limited to those of relatively small sizes. 
+
+Each of these formal semantics constrain the possible I/O operations through the nodes to those allowed by the semantics. Therefore, we convert the problem of finding behaviors accepted by a given semantics model into a constraint satisfaction problem for which many efficient supporting tools exist.
+
+%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%Despite long-term efforts, analyzing business processes is still a challenge. Business processes are generally big. The notations are  informal. The behavior of some elements used for modeling the business is complex. Moreover, the compliance policies are constantly changing.
+%
+% A way to cope with these issues is to automate the analysis process. We need to formalize business models to enable automated analysis, yet we would like to retain traceability with original tasks. 
+%
+%Reo as an alternative to Petri nets -> existing Reo models and tools are not good enough for the job -> hence improved models, created converter that can handle complex patterns, enabled use of constraint solves -> evaluated new tools and performance -> we automated bpmn analysis as noone before, yo, we deserve PhD!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ %We have carried out the mapping in a {model-driven} paradigm using a model to model transformation language. Using a special-purpose language makes it easy to refer to source and target model elements, to match the source models against patterns, and to establish mapping relations between source and target models with no need for a boilerplate code.    
+%%%%%%%%%%%5555555
+
+We developed a unified constraint-based framework to compute formal semantics of a Reo network given the semantics of  its parts in a compositional fashion. Since we have included various existing formal semantics of Reo  in our framework, behavior specifications that are considered invalid according to other formal semantics are ruled out. The  tool we implemented to realize this framework relies on  constraint solvers. Therefore, it benefits from the advances in the field of constraint solving.
+
+Within this framework, the behavior of a Reo construct specified by a given semantics model is expressed in terms of constraints. %%%%5Each constraint consists of binary predicates. These predicates are defined over binary variables representing conditions such as existence of data-flow on a node %or emptiness of a buffer, 
+%%%%5 or numeric relations over values of data-items passing through nodes or the stored values in buffers.  
+ In order to obtain the semantics of the whole Reo connector, the constraints of its constructs are concatenated. The framework replaces data constraints with new binary predicates that represent the logical value of the data constraint. The final constraint is then converted to the acceptable format for an off-the-shelf constraint solver. 
+
+After the constraint solver finds the solutions, the solutions are mapped back to the predicates. The data constraints and the value of their representative predicate are sent to a numeric constraint solver that treats the data symbolically. This way instead of obtaining distinct  possible values for each variable denoting a data-item, we have a range of values, which is a more compact representation. We compared the performance of our approach to the existing ways of computing the formal semantics of Reo.
+
+%Reo provides an expressive formalism for priority, and a mechanism to propagate and block its propagation. However, the original algorithm given by the Reo priority-aware formal semantics is computationally expensive and complex to directly implement.  
+
+We presented a constraint-based approach for calculating priority-aware semantics of Reo models. This approach has been integrated into the mentioned constraint-based framework as the first tool support for priority in Reo. Similarly, this approach benefits from the shift of paradigm from custom direct implementation to the well researched area of constraint solving. We not only provide a way to model the binary notion of priority in Reo, but also we deal with numeric priority. We demonstrated the application of the toolchain to analyze a BPMN process that could not be analyzed previously. 
+
+A limitation of our implemented toolchain is that it relies on the external BPMN modeling tools to create the BPMN process to be analyzed. Since not all BPMN tools support exporting the BPMN models in the expected format, the choice of BPMN editor is limited. 
+
+As our future work, we are planning to expand our constraint-based semantics framework to include other formal semantics of Reo, for instance, those of stochastic and quantitative. In addition, we are planning to extend our constraint-based framework to generate data to be used for simulation and testing purposes.

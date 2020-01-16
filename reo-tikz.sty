@@ -1,0 +1,171 @@
+\ProvidesPackage{reo-tikz}
+
+\def\xcolorversion{2.00}
+\def\xkeyvalversion{1.8}
+
+%\RequirePackage[version=0.96]{pgf}
+\RequirePackage{pgf}
+\RequirePackage{tikz}
+
+\usetikzlibrary{arrows,shapes,automata,backgrounds,fit,decorations.markings,decorations.pathmorphing,shapes.symbols,shapes.geometric,calc,topaths}
+
+\newcommand{\reoconnector}[1]{
+  \begin{tikzpicture}
+  #1
+  \end{tikzpicture}
+}
+\newcommand{\reobox}[1]{
+  \begin{pgfonlayer}{background}
+    \node [connector,fit=#1] {};
+  \end{pgfonlayer}
+}
+
+% thickness of the lines
+\tikzstyle{border}   = [thick]
+
+% nodes and I/O
+\tikzstyle{reonode}  = [border,circle,inner sep=1.5pt,node distance=1.5cm]
+\tikzstyle{mixed}    = [reonode,draw=black,fill=black]
+\tikzstyle{boundary} = [reonode,draw=black,fill=white]
+\tikzstyle{io}       = [border,rectangle,draw=black,fill=white,inner sep=3.25pt,node distance=0.75cm]
+
+%nodes from YJ
+\tikzstyle{point}    = [circle,inner sep=1pt,fill=black,draw=black,node distance=2.1cm]
+
+% channels
+\tikzstyle{channel}=[border,>=stealth]
+\tikzstyle{sync}=[channel,->]
+\tikzstyle{lossysync}=[channel,->,dashed]
+\tikzstyle{filter}=[channel,->,
+postaction=decorate,
+                  decoration={markings,mark=at position 0.5 with 
+                  {\node[rectangle,draw=black,fill=white,transform shape]{$\quad$};}}]
+% \draw [-, thick] (0,0) -- (0.25,0) -- (0.3, -0.1) -- (0.4, 0.1) -- (0.5, -0.1) -- (0.6, 0.1) --(0.65, 0);       \draw [->, thick](0.65,0) -- (1,0);
+%\tikzstyle{syncdrain}=[channel,>-<]
+%\newcommand{\filterbbbb}{
+ %   \begin{tikzpicture}[>=stealth]
+  %     \filldraw [black] (0,0) circle (1pt) (1,0) circle (1pt);
+   %    \draw [-, thick] (0,0) -- (0.25,0) -- (0.3, -0.1) -- (0.4, 0.1) -- (0.5, -0.1) -- (0.6, 0.1) --(0.65, 0);
+    %   \draw [->, thick](0.65,0) -- (1,0);
+    %\end{tikzpicture}
+%}
+\def\bquad{\hskip.5em\relax}
+
+\tikzstyle{syncspout}=[channel,<->]
+\tikzstyle{smallfifo}=[channel,->,
+                  postaction=decorate,
+                  decoration={markings,mark=at position 0.5 with 
+                  {\node[rectangle,draw=black,fill=white,transform shape]{$\bquad$};}}]
+\tikzstyle{fifo}=[channel,->,
+                  postaction=decorate,
+                  decoration={markings,mark=at position 0.5 with 
+                  {\node[rectangle,draw=black,fill=white,transform shape]{$\quad$};}}]
+\tikzstyle{psync}=[channel,->,
+                  postaction=decorate,
+                  decoration={markings,mark=at position 0.5 with 
+                  {\node[transform shape] {$!$};}}]
+
+\tikzstyle{asyncdrain}=[channel,>-<,
+             postaction=decorate,
+	     decoration={markings,mark=at position 0.5 with
+	     {\draw[channel,-] (-2pt,-3pt) -- (-2pt,3pt) [transform shape]
+			       (2pt,-3pt) -- (2pt,3pt) [transform shape];}}]
+\tikzstyle{asyncspout}=[channel,<->,
+	     postaction=decorate,
+	     decoration={markings,mark=at position 0.5 with
+             {\draw[channel,-] (-2pt,-3pt) -- (-2pt,3pt) [transform shape]
+			       (2pt,-3pt) -- (2pt,3pt) [transform shape];}}]
+
+%channels from YJ
+\tikzstyle{syncdrain}=[border,-,
+		postaction=decorate,
+		decoration={markings,mark=at position 0.33 with {\arrow[border,black]{stealth};},
+				     mark=at position 0.67 with {\arrowreversed[border,black]{stealth};}}]
+ %colored channels
+\tikzstyle{BBfifo}=[border,->,>=stealth,blue!40!white,
+                  postaction=decorate,
+                  decoration={markings,mark=at position 0.5 with 
+                  {\node[rectangle,draw=blue!40!white,fill=white,transform shape]{$\quad$};}}]
+\tikzstyle{BBsyncdrain}=[border,-,blue!40!white,
+		postaction=decorate,
+		decoration={markings,mark=at position 0.33 with {\arrow[border,blue!40!white]{stealth};},
+				     mark=at position 0.67 with {\arrowreversed[border,blue!40!white]{stealth};}}]
+\tikzstyle{BBsync}=[border,->,>=stealth,blue!40!white]
+
+
+\tikzstyle{Bfifo}=[border,->,>=stealth,blue,
+                  postaction=decorate,
+                  decoration={markings,mark=at position 0.5 with 
+                  {\node[rectangle,draw=blue,fill=white,transform shape]{$\quad$};}}]
+\tikzstyle{Bfifo1}=[border,->,>=stealth,blue,
+		postaction=decorate,
+		decoration={markings,mark=at position 0.5 with 
+					{\node[rectangle,draw=blue,fill=white,transform shape]{$\quad$};},
+				     mark=at position 0.5 with
+					{\node[circle,inner sep=0pt,minimum size=1mm,draw=blue,fill=blue] {};}}]
+\tikzstyle{Bfifo2}=[border,->,>=stealth,blue!40!white,
+		postaction=decorate,
+		decoration={markings,mark=at position 0.5 with 
+					{\node[rectangle,draw=blue,fill=white,transform shape]{$\quad$};},
+				     mark=at position 0.5 with
+					{\node[circle,inner sep=0pt,minimum size=1mm,draw=blue,fill=blue] {};}}]
+\tikzstyle{Bsyncdrain}=[border,-,blue,
+		postaction=decorate,
+		decoration={markings,mark=at position 0.33 with {\arrow[border,blue]{stealth};},
+				     mark=at position 0.67 with {\arrowreversed[border,blue]{stealth};}}]
+\tikzstyle{Bsync}=[border,->,>=stealth,blue]
+
+
+\tikzstyle{Rsyncdrain}=[border,-,red,
+		postaction=decorate,
+		decoration={markings,mark=at position 0.33 with {\arrow[border,red]{stealth};},
+				     mark=at position 0.67 with {\arrowreversed[border,red]{stealth};}}]
+
+% connector box
+\tikzstyle{connector}=[fill=black!10,rounded corners]
+
+%automata
+% \tikzstyle{state} =[circle,draw,border,inner sep=0pt,minimum size=4mm]
+% \tikzstyle{transition} = [->,border,>=stealth]
+% \tikzstyle{init} =[transition]
+
+\tikzstyle{every state}=[draw=black,text=black,minimum size=10pt,node distance=2.5cm,inner sep=1pt]
+\tikzstyle{transition}=[->,>=stealth']
+\newcommand{\T}[2]{{\ensuremath{\begin{array}{c} \{#1\} \\ #2 \end{array}}}}
+\newcommand{\U}[2]{{\ensuremath{\{#1\} \; #2}}}
+
+%Filter
+
+\newcommand{\behfilter}{%
+	\@ifstar\behfilter@noarrow\behfilter@arrow
+}
+
+\newcommand{\behfilter@arrow}[3]{%	
+  \node (rt@p1) at #1 {} ;
+  \node (rt@p2) at #2 {} ;
+
+  \rt@midpoints{0.25}{0.75}{rt@p1}{rt@p2}
+
+  \draw[thin] #1 to (\rt@xa,\rt@ya);
+  \draw decorate [decoration=zigzag] {(\rt@xa,\rt@ya) -- #3 (\rt@xb,\rt@yb)};
+  \draw[\rt@arrowtip, thin] (\rt@xb,\rt@yb) to #2;
+
+}
+
+
+\newcommand{\behfilter@noarrow}[3]{%	
+  \node (rt@p1) at #1 {} ;
+  \node (rt@p2) at #2 {} ;
+
+  \rt@midpoints{0.25}{0.75}{rt@p1}{rt@p2}
+
+  \draw[thin] #1 to (\rt@xa,\rt@ya);
+  \draw decorate [decoration=zigzag] {(\rt@xa,\rt@ya) -- #3 (\rt@xb,\rt@yb)};
+  \draw[thin] (\rt@xb,\rt@yb) to #2;
+}
+
+
+
+
+
+

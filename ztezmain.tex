@@ -1,0 +1,392 @@
+\documentclass[runnngheads]{book}
+%%%%%harvard \LoadClass[12pt, oneside, letterpaper]{book}
+
+\RequirePackage[centertags]{amsmath}
+\RequirePackage[numbers, comma, sort&compress]{natbib}
+%\RequirePackage[small, md, sc]{titlesec}
+\RequirePackage[tight,nice]{units}
+\RequirePackage{verbatim}
+
+\usepackage{graphicx}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{wrapfig,lipsum,booktabs}
+\usepackage{placeins}
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{upgreek}
+\usepackage{longtable}
+\usepackage{tikz}
+\usepackage{reo-tikz}
+\usetikzlibrary{shapes.geometric}
+\usepackage[linesnumbered,lined]{algorithm2e}
+\usepackage{pgfplots}
+\usepackage{titling}
+\usepackage{authblk}
+\usepackage{makecell}
+%\usepackage{amsmath}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{array}
+\usepackage{floatrow}
+\floatsetup[table]{capposition=top}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{etex}
+\usepackage{lipsum}
+\usepackage[T1]{fontenc}
+\usepackage{caption}
+\usepackage{subfig}
+\usepackage{tikz}
+\usepackage{reo-tikz}
+\usepackage{tikz-bpmn}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{upgreek}
+\usepackage{romanbar}
+\usepackage{tabularx}
+\usepackage{color}
+\usepackage{placeins}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{dsfont}
+\usepackage{amsbsy}
+\usepackage{amstext}
+\usepackage{amscd}
+\usepackage{amsxtra}
+\usepackage{pgf}
+\usepackage{amsfonts, lacromay}
+\usetikzlibrary{chains, fit, shapes,matrix,decorations.shapes}
+%\usepackage{amssymb}
+\usepackage{array}
+\usepackage{syntax}
+\usepackage[english]{babel}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{shapes.geometric,positioning,calc,arrows,snakes}
+\usepackage{chngcntr}
+\usetikzlibrary{arrows,shadows} % for pgf-umlsd
+\usepackage{stmaryrd} %cross product
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{etoolbox}
+\floatstyle{plain}
+\floatname{program}{Listing}
+\usepackage{mathrsfs}
+\usepackage[underline=true,rounded corners=false]{pgf-umlsd}
+\usetikzlibrary{arrows, decorations.markings}
+\usetikzlibrary{shapes.geometric,calc}
+\usepackage{tikz}
+\usetikzlibrary{arrows, shapes, trees, positioning, decorations.markings, patterns} 
+\usepackage{bpmn-events}  
+\usepackage{bpmn-gateways}
+\usepackage{fancyvrb}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{array}
+\usepackage{tikz, amssymb,bm,color}
+\usetikzlibrary{circuits.logic.US,circuits.logic.IEC,fit}
+\newcommand\addvmargin[1]{
+  \node[fit=(current bounding box),inner ysep=#1,inner xsep=0]{};
+}
+
+
+\synctex=1 % turn synctex on automatically to sync between pdf viewer [andy]
+
+%   list an entire bibliography entry inline. Useful for acknowledging when my paper was previously published
+\RequirePackage{bibentry} 
+\nobibliography*        
+
+\RequirePackage{lettrine} % big letter at start of chapter
+\RequirePackage[width=5in, letterpaper]{geometry}
+
+\RequirePackage{fancyhdr} 
+\pagestyle{plain} % options: empty , plain , fancy
+\RequirePackage[palatino]{quotchap}
+%\definecolor{chaptergrey}{rgb}{0.6,0,0}
+\RequirePackage{titling}
+\RequirePackage{setspace} 
+\RequirePackage{booktabs} % for much better looking tables
+\RequirePackage[labelfont={sf,bf,small},textfont={sf,small},justification=RaggedRight,margin=0pt, figurewithin=section, tablewithin=section]{caption}
+\onehalfspacing
+%\raggedright
+
+\def\degreeyear#1{\gdef\@degreeyear{#1}}
+\def\degreemonth#1{\gdef\@degreemonth{#1}}
+\def\degree#1{\gdef\@degree{#1}}
+\def\advisor#1{\gdef\@advisor{#1}}
+\def\department#1{\gdef\@department{#1}}
+\def\field#1{\gdef\@field{#1}}
+\def\university#1{\gdef\@university{#1}}
+\def\universitycity#1{\gdef\@universitycity{#1}}
+\def\universitystate#1{\gdef\@universitystate{#1}}
+
+%%%%%%%%%%%%%%%%
+\universitycity{Leiden}
+\university{Leiden University}
+\universitystate{The Netherlands}
+\degree{PhD}
+\advisor{prof.dr. F. Arbab}
+\author{Behnaz Changizi}
+\department{depppppppppppppppppppppppppppppppp}
+\field{ffff}
+\degreemonth{Dec}
+\degreeyear{2019}
+
+\renewcommand{\maketitle}
+{
+	\singlespacing
+	\thispagestyle{empty}
+	\vspace*{\fill} \vspace{150pt} \begin{center}
+		\Huge \textcolor{black} \thetitle \normalsize 
+	
+	\sc \vspace{100pt}
+%	a dissertation presented  by
+	Behnaz Changizi %to The department??
+%	
+%	\vspace{12pt}
+%	in partial fulfillment of the requirements???
+%	
+%	for the degree of PhD???
+%	
+%	in the subject of Computer Science??
+%	\vspace{12pt}
+%	Leiden University, The Netherlands
+%	
+%	month\ year
+	\end{center}
+	\vspace*{\fill}
+}
+
+% You might also consider licensing your work under Creative Commons). See: http://creativecommons.org/weblog/entry/12824 for other PhD students who have released their work under creative commons.
+
+\newcommand{\bcopyrightpage}{
+	\newpage \thispagestyle{empty} \vspace*{\fill}
+	\sc \noindent \copyright~\textit{\@degreeyear \hspace{3pt}~- \theauthor} \\
+	\noindent All rights reserved.
+	\vspace*{\fill} \newpage \rm
+}
+
+\newcommand{\babstractpage}{
+	\newpage
+	\pagenumbering{roman}
+	\setcounter{page}{3}
+	\pagestyle{fancy}
+	\lhead{Promotor: \@advisor} \rhead{\@author}
+	\renewcommand{\headrulewidth}{0.0pt} 
+	\begin{center}
+	\vspace*{1pt}
+	\Large \textcolor{black}\textit{\@title} \normalsize\\
+	\vspace*{15pt}
+	\sc Abstract \\ \rm
+	\end{center}
+	\doublespace %Harvard registrar requests that abstract is double spaced
+	\input{frontmatter/abstract}
+	\doublespace %Harvard registrar requests that abstract is double spaced	
+	\newpage \lhead{} \rhead{}
+	\cfoot{\thepage}
+	\onehalfspacing
+}
+
+\newcommand{\bdedicationpage}{
+	\pagestyle{fancy}
+	\newpage \thispagestyle{fancy} \vspace*{\fill}
+	\sc \noindent \input{frontmatter/dedication}
+	\vspace*{\fill} \newpage \rm
+	}
+
+% the list of authors
+\newcommand{\bauthorlist}{
+	\pagestyle{fancy}
+	\newpage
+	\thispagestyle{fancy} 
+	\chapter*{Author List}
+	\noindent \input{frontmatter/authorlist}
+	\newpage \rm
+	}
+
+% the acknowledgments page
+\newcommand{\backnowledgments}{
+	\chapter*{Acknowledgments}
+	\noindent
+	\input{frontmatter/thanks}
+	\vspace*{\fill} 
+	\newpage
+	\setcounter{page}{1}
+	\pagenumbering{arabic}}
+	
+% An environment for paragraph-style section
+\providecommand\newthought[1]{%
+   \addvspace{1.0\baselineskip plus 0.5ex minus 0.2ex}%
+   \noindent\textsc{#1}}
+
+
+%%%%%%%%%%%%%%
+\newtheorem{BehAxiom}{Axiom}[section]
+\newtheorem{BehExample}{Example}[section]
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newcounter{examplecounter}
+\newenvironment{BehExample3}{%\begin{quote}%
+\noindent
+ %   \refstepcounter{examplecounter}%
+  \textbf{Example \thechapter-\arabic{examplecounter}}%
+  \quad
+}{%
+}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{black}{$\hookrightarrow$}\space},
+}
+
+% Required packages
+\RequirePackage{graphicx}
+\RequirePackage{hyperref}
+\hypersetup{
+	linktocpage,
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black,
+}
+
+
+% colors
+\RequirePackage{color}
+%\definecolor{Crimson}{rgb}{0.6471, 0.1098, 0.1882}
+
+%%%\RequirePackage{url}
+%%%%\RequirePackage[titles]{tocloft}
+%%%%%\setcounter{tocdepth}{1}
+%%%\renewcommand{\cftchapfont}{\normalsize \scshape}
+
+%%%\renewcommand\bibname{References}
+%%%\renewcommand\listfigurename{Listing of figures}
+%%%\raggedright
+
+%%%\RequirePackage{pdfsync} %do pdf synchronization [andy]
+
+%%%\usepackage[closeFloats, noSeparatorLine]{fitpage} %use the custom modified fltpage package
+%\RequirePackage{afterpage} 
+
+\makeatletter
+\let\my@chapter\@chapter
+\renewcommand*{\@chapter}{%
+  \addtocontents{lol}{
+    \protect\addvspace{10pt}
+  }%
+  \my@chapter
+}
+\makeatother
+\begin{document}
+\title{Constraint-Based Analysis of Business Process Models}
+%\thispagestyle{empty}
+\pagestyle{empty}
+\maketitle
+\newpage
+\newpage
+\vspace*{20cm}
+\input{ccover}
+
+\thispagestyle{empty}
+\frontmatter
+\tableofcontents
+
+\input{tezcommands}
+\input{tezbpmncommands}
+\newsavebox\behbox
+\begin{lrbox}{\behbox}
+\begin{tikzpicture}
+\node[rectangle,draw](a){x};
+\end{tikzpicture}
+\end{lrbox}
+
+
+
+
+%\thispagestyle{empty}
+%\pagenumbering{roman}
+%\setcounter{page}{1}
+
+\thispagestyle{empty}
+\lstlistoflistings
+%\clearpage
+
+\thispagestyle{empty}
+%\pagestyle{empty}
+\listoffigures 
+%\clearpage
+
+
+\thispagestyle{empty}
+%\pagestyle{empty}
+\listoftables
+%\clearpage
+
+
+\onehalfspacing
+
+\pagestyle{plain}
+\clearpage
+
+\mainmatter
+%\pagestyle{plain}
+%\pagenumbering{arabic}
+%\setcounter{page}{1}
+%\renewcommand{\thechapter}{\Alph{chapter}}
+\chapter{Introduction}
+\input{icsea01intro}
+\chapter{Business Process Model and Notation}
+\label{ch:bpmn}
+\chaptermark{BPMN}
+\input{bpmnintro}
+\chapter{Reo Coordination Language}
+\label{ch:reo}
+\input{reo}
+\chapter{Formal Semantics for Reo}
+\label{ch:formsem}
+\input{tez03semantics}
+\input{complexity}
+\chapter{Mapping BPMN to Reo}
+\chaptermark{Mapping BPMN to Reo}
+\label{ch:mapping}
+\input{simplifybpmn}
+\chapter{A Constraint-Based Semantics Framework for Reo}
+\label{chapterCASM}
+\chaptermark{CASM}
+\input{casmicsea01intro}
+\chapter{Priority}
+\label{ch:prio}
+\input{pr}
+\chapter{Conclusion}
+\label{ch:concl}
+\singlespacing
+\input{conclusion}
+\clearpage
+\bibliographystyle{alpha}%odd apalike
+\bibliography{tezthesisref}
+\input{summary}
+\newpage
+\input{nlsummary}
+\input{about}
+\newpage
+{\textbf{\Large{Acknowledgement}}}
+\vspace*{1cm}
+\\
+I would like to express my gratitude to all the people who helped me in any form during the period of my Ph.D. It is impossible to name everyone here, but I would like to mention some of them.
+
+I would like to thank my colleagues in CWI Jose Proenca, Michiel Helvensteijn, Joost Winter, Ziyan Maraikar, Young-Joo Moon, Lacramioara Astefanoaei, Helle Hansen, Christian Krause, Mahdi Jaghoori, Sun Meng, Stijn de Gouw, and Sung-Shik Jongmans, Alexandra Silva, Stephanie Kemper, Yunes Hassen, and Ivan Zapreev.
+
+I would like to especially thank Bahareh Changizi for drawing the bird on the  cover the thesis, Iona Michaelis for editing the last chapter of my thesis, Davey Bruns for editing the Dutch version of my thesis's summary, and Michiel Helvensteijn for proofreading my thesis, .
+
+I give special thanks to my family and friends for lifting me Bahareh Changizi,  Behnam Changizi, Arash Malayeri, Narges Javaheri, Aylar Soltani, Amaneh Mahboubi, Somayeh Bakhtiari, Martina Chirilus-Bruckner, Naser Ayat, Anna Kovacs, Zaklina Stevic, Pedram Malayeri, and Reinahneh Zolfaghari.
+
+This doctoral dissertation is dedicated to my parents to whom I am forever grateful for their love, support, and encouragement and to my husband Rory Michaelis for his love, support, and patience. He
+deserves the final acknowledgment as he suffered most from its completion.
+
+\end{document}

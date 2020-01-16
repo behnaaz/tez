@@ -1,0 +1,53 @@
+Chapter 6
+model driven -> **{model-driven}**
+The rest as follows**:**
+
+check et al
+check emph on what?
+check your own references
+comma space . space good?
+We extend our constraint-based framework with capability of calculating the priority-aware behavior of Reo connectors. >
+We extend our constraint-based framework to support
+
+The rest of this thesis -> dissertation
+??
+
+HIGHLIGHT
+The contributions of this dissertation are as follows:
+ to implement the implement of the 
+how it can be encoded in our constraint-based framework, then we extend this solution to numeric prioeirties. Then, we present an evaluation on the performance of our solution through a case study.
+ %TODO refer to 
+
+corresponding to the most common Reo elements.
+
+TODO 
+REFER \cite{fsen19}
+Brag in intro in contribution
+ Only numeric model ???
+too chapter intro faghat be khodam refer bedam
+check if i say tables for one 
+Deleted
+%Later, throughout this thesis, we show how our tools can help to detect such problems on the business process models. 
+TODO???? before this section ?
+\section{Correctness and Compositionality}
+\label{sec:proofs}
+
+An experimental study done on the efficiency of using SAT-solvers to generate Reo formal semantics \cite{JoseThesis} compares two prototypes based on constraint satisfaction techniques and connector coloring semantics, without taking data constraints in consideration. The results illustrate that the approach based on constraint solving scales better and????? is more efficient. > 
+An experimental study done on the efficiency of using SAT-solvers to generate Reo formal semantics \cite{JoseThesis} compares two prototypes based on constraint satisfaction techniques and connector coloring semantics, without taking data constraints in consideration. The results illustrate that the approach based on constraint solving scales better and is more efficient. In chapter \ref{ch:prio} we present an evalation through a case study, which affirms this conclusion.
+
+
+CHECK
+After in chapter 7 comma nazashtam ha
+spell check
+examples of semantics
+Reo automata section
+table check shoe
+Another inherent limitation of these algorithms stem from that they model data explicitly. As a consequence, in practice the set of input data needs to be limited to a predefined small set. This holds even for connecters with no data-sensitive components, which shows the same behavior for each data item.
+unrefeted filisting tab
+In Chapter \cite{ch:prio} (\cite{behconstraint}), we presented the constraints that a primitive imposes on a network as a CSP. Here we extend these constraints with priority capturing variables. 
+
+ In addition, we are planning to extend our constraint-based framework to generate data to be used for simulation and testing purposes.
+
+Begoo darbare table
+
+toolset

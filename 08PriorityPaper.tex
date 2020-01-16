@@ -1,0 +1,683 @@
+\section{Priority flow}
+\label{sec:example}
+%%%
+Although there is no explicit definition for priority in BPMN 2.0, handling transactions comes with an implicit notion of priority. A notion of priority is required to  express preference of one path among others in an otherwise non-deterministic choice among several event-based flows (e.g. event-based gateway). For instance, when modeling the behavior of a mobile device handling a low battery signal should take precedence to a weather forecast notification. 
+Some modeling tools for BPMN e.g. \cite{bpmntoolprio} and \cite{bizagi} already allow defining priority over tasks and events. 
+%BPEL already has a notion of priority for its tasks(?). It is useful to have a mechanism to allow us to put preferences on events (a failure event should be treated with more priority than normal flow). 
+%%%
+
+In this section, we introduce the concept of priority using a sample business process. Similarly to Petri Nets, one can model the execution of tasks in a Reo process model by firing transitions and moving tokens to and from FIFO buffers. For example, Figure~\ref{fig:motivationDecomposed} shows a simple process consisting of one task.
+
+In this process,  $I$ is an input node, $O$ is an output node, and the \emph{FIFO} channel with ends $A$ and $B$ represents a task. When a data input arrives at node $I$, a token enters to the buffer.
+The rest of the circuit implements the cancellation behavior: by submitting a message to the input node $E$, one can interrupt the process, i.e., prevent a token at the input node $I$ from entering the buffer, or removing the token from the buffer. If the cancellation message on the node $E$ arrives simultaneously with the input message at node $I$, i.e., before the actual execution of the task is started, the execution token will be removed by the \emph{SyncDrain} channel with ends $F$ and $C$. If the cancellation message arrives after the execution of the task is started, the execution token will be destroyed by the \emph{SyncDrain} channel with ends $F$ and $D$. In the absence of the input message, the \emph{LossySync} channel dismisses the cancellation request by losing the message.
+
+More complex examples of process models in Reo, more specifically, Reo models of compensatable tasks, cancellable processes with $n$ sequential or $n$ parallel activities, and parallel processes with constraints on task execution order, can be found in~\cite{natallialong}.
+
+Reo provides an elegant set of modeling primitives for coordinating the execution of tasks in a business process (regardless of their nature: they can be either abstract tasks modeled by FIFO channels, or actual web services). Using a rather small set of predefined channels, one can compose arbitrarily complex workflow patterns.  
+However, for the aforementioned scenario, Reo channels from the basic set are not enough. As the circuit needs to recognize the priority of the cancellation flow over the normal execution flow. We have introduced a new type of channel, called \emph{priority sync} channel. 
+%Also note that CA in its initial form are not able to express the semantics of the context-sensitive \emph{lossySync} channel~\cite{ccClarkeCA06} \cite{Bonsangue2012685} manifested by the presence of non-deterministic choices between transitions involving port $\{E\}.$  
+%\newcommand{\myca}{
+%\node[state] (s) {$s_0$};
+          %\node[state] at (3, 0) (q) {$s_1$};
+          %\path[transition]
+         % (s) edge [bend right=20] node[below] { \{I, A\} } (q)
+        %  (s) edge [bend right=60] node[below] { \{I, A, E\} }(q)
+       %   (q) edge node[fill=white] { \{B, O\} } (s)
+      %    (s) edge [loop left] node[left] { \{I, A, C, F, E\} } (s)
+     %     (s) edge [loop above] node[left] { \{E\} } (s)
+    %      (q) edge [loop above] node[right] { \{E\} } (q)
+   %       (q) edge [bend right=60] node[above] { \{B, D, F, E\} } (s)
+  %        (q) edge [bend right=20] node[above] { \{B, O, E\} } (s)
+ %         ;
+%}
+%\newcommand{\taskCancellation}{
+  %\tikz{
+    %start node 	
+    %\node[point,label=below left:$I$] at (0.5, 2) (I) {};
+    %end node 	
+    %\node[point,label=below right:$O$] at (3.5, 2) (O) {};
+	%A
+    %\node[point,label=above:$A$] at (1, 2) (A) {};
+    %\draw [-, thick, fill=white] (1, 2) circle (3pt);
+    %\draw [-, thick](0.93, 1.93) -- (1.07, 2.07);
+    %\draw [-, thick](0.93, 2.07) -- (1.07, 1.93);
+    %B
+    %\node[point,label=above:$B$] at (3, 2) (B) {};
+    %\draw [-, thick, fill=white] (3, 2) circle (3pt);
+    %\draw [-, thick](2.93, 1.93) -- (3.07, 2.07);
+    %\draw [-, thick](2.93, 2.07) -- (3.07, 1.93);
+    %C
+    %\node[point,label=below left:$C$] at (1, 1) (C) {};
+    %D
+    %\node[point,label=below right:$D$] at (3, 1) (D) {};
+    %F
+    %\node[point,label=below left:$F$] at (2, 0) (F) {};
+    %\draw [-, thick, fill=white] (2, 0) circle (3pt);
+    %\draw [-, thick](1.93, -0.07) -- (2.07, 0.07);
+    %\draw [-, thick](1.93, 0.07) -- (2.07, -0.07);
+    %E (cancellation input)
+    %\node[point,label=below left:$E$] at (2, -1) (E) {};
+
+    %channels
+   % \draw[sync]  (I) to node {} (A);
+   % \draw[fifo]  (A) to node {} (B);
+   % \draw[sync]  (B) to node {} (O);
+   % \draw[sync]  (A) to node {} (C);
+   % \draw[sync]  (B) to node {} (D);
+   % \draw[syncdrain]  (C) -- (F);
+  %  \draw[syncdrain]  (D) -- (F);
+ %   \draw[lossysync]  (E) to node {} (F);
+  %}
+%}
+%
+%\newcommand{\taskCancellationfull}{
+  %\tikz{
+    %start node 	
+    %\node[point,label=below left:$I$] at (0.5, 2) (I) {};
+    %end node 	
+    %\node[point,label=below right:$O$] at (3.5, 2) (O) {};
+	%A
+    %\node[point,label=above:$A$] at (1, 2) (A) {};
+    %\draw [-, thick, fill=white] (1, 2) circle (3pt);
+    %\draw [-, thick](0.93, 1.93) -- (1.07, 2.07);
+    %\draw [-, thick](0.93, 2.07) -- (1.07, 1.93);
+    %B
+    %\node[point,label=above:$B$] at (3, 2) (B) {};
+    %\draw [-, thick, fill=white] (3, 2) circle (3pt);
+    %\draw [-, thick](2.93, 1.93) -- (3.07, 2.07);
+    %\draw [-, thick](2.93, 2.07) -- (3.07, 1.93);
+    %C
+    %\node[point,label=below left:$C$] at (1, 1) (C) {};
+    %D
+   % \node[point,label=below right:$D$] at (3, 1) (D) {};
+    %F
+    %\node[point,label=below left:$F$] at (2, 0) (F) {};
+   % \draw [-, thick, fill=white] (2, 0) circle (3pt);
+   % \draw [-, thick](1.93, -0.07) -- (2.07, 0.07);
+  %  \draw [-, thick](1.93, 0.07) -- (2.07, -0.07);
+    %E (cancellation input)
+ %   \node[point,label=below left:$E$] at (2, -1) (E) {};
+%
+    %channels
+   % \draw[sync]  (I) to node {} (A);
+   % \draw[fifo]  (A) to node {} (B);
+   % \draw[sync]  (B) to node {} (O);
+   % \draw[sync]  (A) to node {} (C);
+   % \draw[sync]  (B) to node {} (D);
+   % \draw[syncdrain]  (C) -- (F);
+  %  \draw[syncdrain]  (D) -- (F);
+  %  \draw[lossysync]  (E) to node {} (F);
+    %%%full
+ %   \draw [-, thick, fill=black] (2, 2) circle (2pt);
+  %}
+%}
+
+%\tikzstyle{every state}=[node distance=4.0cm]
+%\begin{figure}[t]
+%\centering
+%\hspace{-.5em}
+%\sub figure[Process model]{
+	%\label{fig:task}
+ %	\tikz{\taskCancellation}
+%}
+%\hspace{-1.5em}
+%\sub figure[Process model with executed task]{
+%	\label{fig:executedTask}
+%	\tikz{\taskCancellationfull}
+%}
+%\hspace{-2em}
+%\sub figure[CA-based semantic model]{
+  % \label{fig:taskCA}
+ %  \tikz{\myca}
+%}
+%\caption{Cancellation of a process with one task}
+%\label{fig:motivation}
+%\end{figure}
+%
+%At the level of graphical process modeling, this issue is easy to resolve by defining Reo channels to control priority flow. 
+
+%\begin{itemize}
+ % \item []   
+ {\psync}  A \emph{PrioritySync} channel is similar to a \emph{Sync} channel with the exception that it imposes priority on its data-flow. The acquired priority propagates through the connector (unless it is blocked), and it can influence the non-deterministic choices in the containing connector by favoring data-flow alternatives that incorporate the channel's ends. 
+%\end{itemize}
+
+Since Reo synchronous channels propagate data through the network, we also need means to define scopes for the priority flow and bound it only to certain parts of the network. To achieve that, we have introduced the following channels:
+
+%\begin{itemize}
+  %\item [] 
+  {\bcsync}  A \emph{BlockSourceSync} channel is a  \emph{Sync} channel that blocks the propagation of priority from its source end towards its sink end. 
+
+ % \item []
+ {\bksync}   A \emph{BlockSinkSync}  channel is a  \emph{Sync} channel that stops  propagation of priority from its sink end towards its source end.
+
+  %\item [] 
+  {\bsync}  A \emph{BlockSync}  channel is a combination of \emph{BlockSourceSync} and \emph{BlockSinkSync}. It stops the propagation of priority in both directions.
+%\end{itemize}
+
+%With the help of these channels, we can fix the issue in our scenario: intuitively, if we replace the \emph{Sync} channel with ends $A$ and $C$ and the \emph{Sync} channel with ends $B$ and $D$ with the \emph{PrioritySync} channels, our cancellation flow should be treated with higher priority. Figure~\ref{fig:motivationDecomposed} shows the modified version of our motivating example which should correctly handle cancellation messages by prioritizing paths via \emph{PrioritySync} channels. We give explicit names to channel and node ports to be able to refer to variables associated with individual primitives while explaining our solution in the rest of this paper.
+%The CA semantics for Reo does not incorporate priority constraints. 
+There is ongoing work on an existing automata based formal semantics of Reo to handle priority constraints, but our practical needs for dealing with large models of realistic business processes complicates direct use of automata-based semantic models. Motivated by the \emph{constraint-based} nature of Reo itself, and the fact that constraint solving has advanced to the point that a number of practically useful constraint solvers exist today that can cope with realistic-sized problems, we propose to define the behavior of Reo channels, both basic and priority related, as algebraic constraints that alter a set of variables.
+
+\tikzstyle{every state}=[node distance=3.0cm]
+\begin{figure}[!h]
+\centering
+\scalebox{.9}{
+  \tikz{
+    %I, input node 	
+    \node[point,label=below left:$I$]  at (0.7, 3) (I) {};
+    %O, output node 	
+    \node[point,label=below right:$O$] at (7.3, 3) (O) {};
+    %A
+    \node[point,label=above:$A$]   at (2, 3)   (A) {};
+    \draw [-, thick, fill=white] (2, 3) circle (3pt);
+    \draw [-, thick](1.93, 2.93) -- (2.07, 3.07);
+    \draw [-, thick](1.93, 3.07) -- (2.07, 2.93);
+    %A1, A2, A3
+    \node[point,label=above:$A_1$] at (1.5, 3) (A1){};
+    \node[point,label=above:$A_2$] at (2.5, 3) (A2){};
+    \node[point,label=left:$A_3$]  at (2, 2.5) (A3){};
+    %B
+    \node[point,label=above:$B$] at (6, 3) (B) {};
+    \draw [-, thick, fill=white] (6, 3) circle (3pt);
+    \draw [-, thick](5.93, 2.93) -- (6.07, 3.07);
+    \draw [-, thick](5.93, 3.07) -- (6.07, 2.93);
+    %B1, B2, B3
+    \node[point,label=above:$B_1$] at (5.5, 3) (B1) {};
+    \node[point,label=above:$B_2$] at (6.5, 3) (B2) {};
+    \node[point,label=right:$B_3$] at (6, 2.5) (B3) {};    
+    %C, C1, C2
+    \node[point,label=below left:$C$]  at (2, 1) (C) {};
+    \node[point,label=left:$C_1$]  at (2, 1.3) (C1) {};
+    \node[point,label=below:$C_2$]  at (2.2, 0.85) (C2) {};    
+    %D, D1, D2
+    \node[point,label=below right:$D$] at (6, 1) (D) {};
+    \node[point,label=right:$D_1$]  at (6, 1.3) (D1) {};
+    \node[point,label=below:$D_2$]  at (5.8, 0.85) (D2) {};
+    \begin{scope}[shift={(0,1.3)}]
+    %F
+    \node[point,label=below left:$F$] at (4, -0.4) (F) {};
+    \draw [-, thick, fill=white] (4, -0.4) circle (3pt);
+    \draw [-, thick](3.93, -0.33) -- (4.07, -0.47);
+    \draw [-, thick](3.93, -0.47) -- (4.07, -0.33);
+    %F1, F2, F3
+    \node[point,label=below left:$F_2$]  at (3.7, -0.4) (F2) {};    
+    \node[point,label=below right:$F_3$]  at (4.3, -0.4) (F3) {};    
+    \node[point,label=below left:$F_1$] at (4, -0.8)   (F1) {};    
+    \end{scope}
+    %E (cancellation input)
+    \node[point,label=below left:$E$] at (4, -.6) (E) {};
+
+    %channels
+    %A
+    \draw[sync]  (I) to node {} (A1);
+    \draw[channel]  (A1) to node {} (A);
+    \draw[channel]  (A) to node {} (A2);
+    \draw[channel]  (A) to node {} (A3);
+    %B
+    \draw[fifo]  (A2) to node {} (B1);
+    \draw[channel]  (B1) to node {} (B);
+    \draw[channel]  (B) to node {} (B2);
+    \draw[channel]  (B) to node {} (B3);
+    \draw[sync]  (B2) to node {} (O);
+    %C
+    \draw[psync]  (A3) to node {} (C1);
+    \draw[channel] (C1) to node {} (C);
+    \draw[channel] (C) to node {} (C2);
+    %D    
+    \draw[psync]  (B3) to node {} (D1);
+    \draw[channel] (D1) to node {} (D);
+    \draw[channel] (D) to node {} (D2);
+    %F
+    \draw[syncdrain]  (C2) -- (F2);
+    \draw[syncdrain]  (D2) -- (F3);
+    \draw[channel]  (F1) to node {} (F);
+    \draw[channel]  (F) to node {} (F2);
+    \draw[channel]  (F) to node {} (F3);
+    \draw[lossysync]  (E) to node {} (F1);
+    
+    %channel labels
+    %i1-i1
+    \node[label=right:$i_1$] at (A3) {};
+    \node[label=right:$i_2$] at (C1) {};
+    %j1-j2
+    \node[label=left:$j_1$] at (B3) {};
+    \node[label=left:$j_2$] at (D1) {};
+    %f1-f2
+    \node[label=below right:$p_1$] at (A2) {};
+    \node[label=below left:$p_2$]  at (B1) {};
+    %h1-h2
+    \node[label=right:$h_1$] at (C2) {};
+    \node[label=above:$h_2$]  at (F2) {};
+    %k1-k2
+    \node[label=left:$k_1$] at (D2) {};
+    \node[label=above:$k_2$] at (F3) {};
+    %g1-g2
+    \node[label=right:$g_1$] at (F1) {};
+    \node[label=right:$g_2$] at (E) {};
+}
+}%scalebox
+\caption{Cancellation of a process with one task: decomposed circuit}
+\label{fig:motivationDecomposed}
+\end{figure}
+%\vspace{-4cm}
+%theory.tex
+\section{Constraint encoding for priority flow}
+\label{sec:constraints}
+We model propagation of priority using the concept of \emph{innate} and \emph{acquired} priority. Both ends of \emph{priority sync} have \emph{innate} priority. When an end with \emph{innate} priority connects to another end that has no priority, the new end will obtain \emph{acquired} priority. When one end of a synchronous type channel (e.g. \emph{sync}, \emph{lossy sync}, \emph{sync drain}, ...) has \emph{acquired} priority, the other end has \emph{innate} priority. 
+
+However, in the case of non-synchronous channels (e.g. \emph{FIFO}, \emph{async drain}) and also the priority blocking channels, their ends can only have \emph{acquired} priority. Here, we update the constraint-based framework for Reo~\cite{behconstraint} to capture priority and   the priority propagation mechanism, which we informally described above.
+ %Let $\mathcal{N} = \mathcal{N}^{src} \cup \mathcal{N}^{mix} \cup \mathcal{N}^{snk}$ be the global set of nodes, $\mathcal{M}$ the global set of state memory variables, and $\mathcal{D}$ the global set of numerical data values. The set of primitive ends $\mathcal{P}$ consists of all primitive ends $p$ derived from $\mathcal{N}$ by marking its elements with superscripts $c$ and $k$, according to the following grammar:$$p ::= r^c ~|~ s^k $$\noindentwhere $r \in \mathcal{N}^{src} \cup \mathcal{N}^{mix}$ and $s \in \mathcal{N}^{snk} \cup \mathcal{N}^{mix}$. Observe that the primitive ends $n^c$ and $n^k$ connect on the common node $n$.$p \in \mathcal{P}$,
+In the rest of this paper, we omit data constraints when defining behavior of Reo channels. Data constraints are irrelevant for our extension to model priority flow and were thoroughly covered in our previous work~\cite{behconstraint}.
+
+Let $\mathcal{N}$ be a global set of ends and $\mathcal{M}$ the global set of state memory variables, $n \in \mathcal{N}$ and $m \in \mathcal{M}$. A free variable $v$ that occurs in the constraints encoding the behavior of a Reo network has one of the following forms:
+%
+%We use the following variables to describe the behavior of a Reo network: 
+
+\begin{itemize}
+ \item $\tilde{n}$ ranges over $\{ \top, \bot \}$ to show presence or absence of data-flow on the end $n$.
+% \item $\hat{n}$ ranges over $\mathcal{D}$ to represent the data value passing through the node $n$.
+ \item $\mathring{m}, \mathring{m}'$ range over $\{ \top, \bot \}$ to denote whether or not the state memory variable $m$ is defined in the source and the target states of the transition, respectively.
+ %\item $\hat{m}, \hat{m}'$ range over $\mathcal{D}$ to represent the values of the state memory variable $m$ in, respectively, the source and the target states of the transition to which the encoded condition belongs.
+ \item $n^\triangleright$ ranges over $\{ \top, \bot \}$ to indicate that the reason for lack of data-flow through the end $n$ originates from the primitive or the context (of this primitive), respectively.
+ \item $n^{!^\bullet}$, $n^{!^\circ}$ range over $\{ \top, \bot \}$ model priority flow denoting whether an end has \emph{acquired} or \emph{innate} priority. An end has priority iff at least one of these variables is $true$.
+ %\emph{Innate} priority refers to the situation when a node is imposing priority flow to be propagated. \emph{Imposed} priority refers to the situation when a node  obtained priority flow through propagation.
+% \item  $n^{\sharp}$ ranges over $\mathbb{N}_0$, the set of natural numbers including 0. It represent the maximum number of I/O operations that are allowed to occur through the boundary port $N$. This is only used when there is a finite number of I/O requests coming from environment. If the I/O requests are infinite, then we discard this variable.
+ %A Reo network can model both finite and infinite number of I/O operations. In order to model the finite case, we use the $p^\sharp = N$ notation, which means that only $N$ I/O operations can be done through $p$. 
+ %This is only defined for \emph{boundary} ends i.e $n \in \mathcal{N}^{src} \cup \mathcal{N}^{snk}$.
+
+\end{itemize}
+
+The following grammar defines a constraint $\Psi$, which encodes the behavior of a Reo network:
+
+%\begin{table}[H]
+\begin{tabular}{c c l l}
+\centering
+  & \\
+%  $t $&$::= $&$\hat{n}\ |\ \hat{m}\ |\ \hat{m}'\ |\ d\ |\ n_0 \ |\ t \circledast \ d$ & (terms)\\
+  $a $&$::=$&$ \tilde{n}\ |\ n^{!^\bullet}\ |\ n^{!^\circ}\ | \ n^\triangleright\ |\ \mathring{m}\ |\ \mathring{m}'$& (atoms)\\
+  %|\ t=t\ |\ t<t \ |\ n^\sharp=n_0\ |\ n'^\sharp=n_0$ 
+  $\Uppsi $&$::=$&$ \top \ | \ a\ |\ \neg \Uppsi \ | \ \Uppsi \wedge \ \Uppsi $ & (formulae)\\
+  &
+\end{tabular}
+
+%
+%$d \in \D$ is a constant, $\circledast \in \{+, -, \ast, /, \%, \tavan \}, $ $p$ is  either of the form $n^c$ or $n^k$, and $n_0 \in \mathbb{N}_0$.
+A solution to a formula $\Uppsi$ is a map from the variable sets $V$ to  a value in $\{\bot, \top\}$. The satisfaction rules for a solution $\langle \delta \rangle$ are defined as follows:
+
+\noindent
+\begin{tabular}{m{1.3cm}lm{1.5cm}m{2.5cm}l}
+%\centering
+  &&&\\
+  $\langle \delta \rangle \vDash \top $&always&
+  $\langle \delta \rangle \vDash \tilde{n} $& iff  $\delta(\tilde{n})=\top$ \\
+%  & when $n$ is a mixed node or the I/O requests over $n$ is infinite.\\
+ % $\langle \delta, \delta_d \rangle \vDash \tilde{n} $& iff  $\delta(\tilde{n})=\top \wedge n^\sharp > 0$, \\
+ % & when $n$ is a sink or source node with finite I/O requests.\\
+  $\langle \delta \rangle \vDash p^\triangleright$& iff $\delta(p^\triangleright)=\top$&
+  $\langle \delta \rangle \vDash \mathring{m}$& iff $\delta(\mathring{m})=\top$\\
+  $\langle \delta \rangle \vDash \mathring{m}'$&iff $\delta(\mathring{m}')=\top$&
+  $\langle \delta \rangle \vDash p^{!^\circ}$&iff $\delta(p^{!^\circ})=\top$\\
+  $\langle \delta \rangle \vDash p^{!^\bullet}$&iff $\delta(p^{!^\bullet})=\top$&
+   $\langle \delta \rangle \vDash \neg \Uppsi$ & iff $\langle \delta \rangle \not \vDash \Uppsi$
+ % $\langle \delta, \delta_d \rangle \vDash %n^{\sharp}=N$&iff $\delta(n^{\sharp})=N$\\
+%%????TODO    $\langle \delta, \delta_d \rangle \vDash p^{!^\bullet}$&iff $\delta(p^{!^\bullet})=\top$\\
+%  \end{tabular}
+%  
+%  \begin{tabular}{p{3.6cm}p{0cm}p{0cm}p{0cm}p{7.5cm}p{0cm}}
+%  \centering
+%  $\langle \delta, \delta_d \rangle \vDash P(t_1, t_2, ..., t_n)$&iff $(\delta_d(t_1), \delta_d(t_2),..., \delta_d(t_n)) \subseteq I(P(t_1, t_2, ..., t_n))$\\
+  %\end{tabular}
+ % \begin{tabular}{p{1.75cm}p{2cm}p{.5cm}p{.2cm}p{2.75cm}p{2cm}}
+  %\centering
+  %$\langle \delta, \delta_d \rangle \vDash t_1 < t_2$&\\  
+\end{tabular} 
+\noindent
+\begin{tabular}{m{1.8cm}lm{2.5cm}l}
+$\langle \delta \rangle \vDash \Uppsi_1 \wedge \Uppsi_2$&iff $\langle \delta \rangle \vDash \Uppsi_1 \wedge \langle \delta \rangle \vDash \Uppsi_2$ \\
+\end{tabular} 
+
+%\begin{definition}[Solutions set $\mathfrak{S}$]
+%Formally a solution for $\Psi=\langle $$\mathcal{N}_{\Psi}, $$\mathcal{M}_{\Psi},$ $M_{\Psi 0}, $$\mathcal{V}_{\Psi},$ $C_{\Psi}$ $\rangle$ is a (partial) function from $\mathcal{V}_{\Psi}$ to the set of binary values $\{\top, \bot\}$. 
+We call the set of all solutions for $\Psi$ as $\mathfrak{S}(\Psi)$.
+%\end{definition}
+
+%To ease discussion, we define the following operations on a solution $s$ for $\Psi=\langle $$\mathcal{N}_{\Psi}, $$\mathcal{M}_{\Psi},$ $M_{\Psi 0},$ $\mathcal{V}_{\Psi},$ $C_{\Psi}$ $\rangle$: 
+% source($s$)=$\langle\{m|m^\circ$ $\in \mathcal{M}_{\Psi}: s(m^\circ)=\top\}\rangle$, target($s$)=$\langle$$\{m|$ $m'^\circ$$ \in \mathcal{M}_{\Psi}: $$s(m'^\circ)=\top\}\rangle$, flow($s$)=$\{n|n \in \mathcal{N}_{\Psi}: s(\tilde{n})=\top\}$, reason-giving($s$)=$\{n|n \in \mathcal{N}_{\Psi}: s(n^\triangleright)=\top\}$. We say $s \backsim \longtransition{q}{N,R}{p}$, where q=source(s), N=flow(s), R=reason-giving(s), p=source(s).
+
+\begin{definition}[RCSP] A Reo Constraint Satisfaction Problem (RCSP) is a tuple $\langle \mathcal{N}, \mathcal{M}, M_0, \mathcal{V}, C \rangle$, where:\\
+%\begin{itemize}
+ $\bullet$ $\mathcal{N}$ is a finite set of ends.\\
+ $\bullet$ $\mathcal{M}$ is a finite set of state memory variables.\\
+ $\bullet$ $M_0 \subseteq \mathcal{M}$ is a set of state memory variables that define the initial configuration of a network.\\
+%\item $B_0 : \mathcal{N} \pto \mathbb{N}$ (set of natural numbers),  is a function from the set of boundary port names with a limited number of I/Os to their maximum number of I/O requests.
+ $\bullet$ $\mathcal{V}$ is a set of variables $v$ defined by the grammar $v ::= \tilde{n}\ |\ n^\triangleright\ |\ \mathring{m}\ |\ \mathring{m}'\ |\ n^{!^\circ}\ |\ n^{!^\bullet}$ for $n \in \mathcal{N}$ and $m \in \mathcal{M}$.\\ %The values that the variables of the forms $ \hat{n}, \hat{m} $, and $ \hat{m}' $ can assume are subsets of $\mathcal{D}$, $n^{\sharp}$ and $n'^\sharp$ can take a value in $\mathbb{N}_0$, and the other variables are Boolean, with values in $\{\top, \bot\}$.
+ $\bullet$ $C=\{C_1, C_2, ..., C_m\}$ is a finite set of constraints, where each $C_i$ is a constraint given by the grammar $\Psi$ involving a subset of variables $V_i \subseteq \mathcal{V}$.
+%\end{itemize}
+\end{definition} 
+
+%Composition?????
+%/////////
+
+Here, we explain how to obtain the constraints corresponding to a Reo network by composing the RCSPs of its parts.
+\begin{definition}[Composition $\odot$]
+\label{def:composition}
+The composition of two RCSPs $\rho_1=\langle $$\mathcal{N}_1, $$\mathcal{M}_1,$$ M_{0,1}, \mathcal{V}_1, C_1 \rangle$ and $\rho_2=\langle $$ \mathcal{N}_2, $$\mathcal{M}_2,$ $M_{0,2},$ $\mathcal{V}_2,$ $ C_2 \rangle$ is defined as follows:
+$$\rho_1 \odot \rho_2=\langle \mathcal{N}_1 \cup \mathcal{N}_2, \mathcal{M}_1 \cup \mathcal{M}_2, M_{0,1} \cup M_{0,2}, \mathcal{V}_1 \cup \mathcal{V}_2, C_1 \wedge C_2 \rangle$$
+\end{definition}
+
+When connecting two Reo networks, the following axioms should hold. %enforce a restriction on the possible solutions to prevent that:
+%The \emph{join axiom}  
+It states that a reason for no-flow should have been propagated and cannot just appear by connecting two ends. %Note that in our model, two sink ends or two source ends can connect to each other only via an intermediate node.
+
+\begin{axiom}[Join axiom]\label{ax:mixednode}
+When a source end $c$ from a Reo network connects to a  sink end $k$ of another network, the following constraint holds:
+$ \neg \tilde{c} \Leftrightarrow \neg \tilde{k} \Leftrightarrow  ({c}^\triangleright \vee {k}^\triangleright)$.
+\end{axiom}
+%\noindent
+
+\begin{axiom}[Priority join axiom]\label{ax:joinprio}
+When a source end $c$ from a Reo network connects to a sink end $k$ of another network,
+$(c^{!^\circ}\vee c^{!^\bullet} \Leftrightarrow k^{!^\circ}\vee k^{!^\bullet}) \wedge (c^{!^\circ}\wedge k^{!^\circ} \Leftrightarrow c^{!^\bullet}\vee k^{!^\bullet})$.
+\end{axiom}
+
+The \emph{priority join} axiom guarantees that there is a source of propagation for priority and that priority gets propagated. % other possible combinations of values that the given priority variables can hav
+%TODO
+For priority to be able to affect the data-flow in a Reo network, two conditions must hold: i) all primitives should propagate the priority information, ii) the primitives that perform non-deterministic choices between alternative data-flow should respect the priority.
+The former condition is achieved by constraining the variables that represent priority. For realizing the latter, we need to exclude cases where a data-flow over an end with no priority is chosen over the data-flow over a prioritized end, if the prioritized end is ready to perform I/O actions. Axiom \ref{ax:chooserprio} carries out this requirement.
+
+\begin{axiom}[Non-deterministic choice axiom]\label{ax:chooserprio}
+Let $N$ be a set of ends from which a Reo primitive non-deterministically chooses one for communication. The set of ends with priority is defined as $N^!=\{n | n \in N, n^{!^\circ}\ \vee\ n^{!^\bullet}\}$. The following predicate guarantees that a node with no priority has data-flow only if no prioritized node is ready to interact.
+
+$(\bigvee_{x \notin N^!} \tilde{x} \wedge \bigwedge_{y \in N^!} \neg \tilde{y})  \Rightarrow \bigwedge_{y \in N^!} \neg y^\triangleright $
+\end{axiom}
+
+%\begin{axiom}[Grounding axiom]
+%\label{ax:grnd}
+%Let $B \subset N$ be the set of boundary nodes in a Reo network. The following predicate rules out the solutions that are only present for future expansion of the network:
+%$\forall b \in B: b^{!^\circ}\ \Rightarrow\ b^{!^\bullet}$.
+%\end{axiom}
+%
+In \cite{behconstraint}, the authors described the behavioral constraints that a primitive imposes on a network as a CSP. We extend these constraints with priority capturing variables. 
+
+%\input{table}
+%In \cite{behconstraint} we described the behavioral constraints that a primitive imposes on a network as a CSP. We now extend these constraints with priority capturing variables. 
+If the variable $p^{!^\bullet}$ for a primitive end $p$ is \emph{true}, the end $p$ has \emph{innate} priority. For example, in \emph{PrioritySync} channel, both ends have \emph{innate} priority. Therefore, for a \emph{PrioritySync} with source end $a$ and sink end $b$, we add $a^{!^\bullet} \wedge b^{!^\bullet}$. % to the existing constraints.
+
+Another way for a primitive end to have \emph{innate} priority is to obtain it via propagation. For instance, if one end of a \emph{Sync} channel has \emph{acquired} priority, which means it is prioritized because a primitive connected to it propagates priority, then
+
+\input{longtable}
+
+the other end will have \emph{innate} priority. We denote \emph{acquired} priority for a primitive end $p$ as: $p^{!^\circ} \wedge \neg p^{!^\bullet}$. Thus, the priority capturing constraint for a \emph{Sync} channel with source end $a$ and sink end $b$ can be specified as follows:
+
+$\neg(a^{!^\circ} \vee a^{!^\bullet} \vee b^{!^\circ} \vee b^{!^\bullet}) \vee (a^{!^\circ} \wedge \neg a^{!^\bullet} \wedge b^{!^\bullet}) \vee (a^{!^\bullet} \wedge b^{!^\circ} \wedge \neg b^{!^\bullet}) $
+
+Priority blocking primitives should not propagate the priority. This is  done by  $\neg p^{!^\bullet}$ for the primitive end $p$, which should not be prioritized due to the priority of the other end(s). Nevertheless, it is still possible for $p$ to have \emph{acquired} priority through a potential connecting primitive. Therefore, the constraint allows $p^{!^\circ} = \top$.
+
+The Table~\ref{tab:contextencodingprioadded2} shows the constraint encoding of Reo channels and nodes in presence of priority flow. 
+
+The solutions to the CSP expressing the behavior of a Reo network encode possible data-flow through its nodes. Since a network may later connect to another network, the constraints should account for priority imposed by potential future connections. However, this information can be discarded when analyzing the behavior of a network in isolation. To exclude such cases, we need to restrict the possible values of boundary ends. The following axioms formalize these considerations:
+
+%\begin{axiom}[Limited request axiom]
+%\label{ax:limited}
+%The following constraint limits the numbers of I/O request on the boundary nodes with the limited I/O requests:
+%$\forall b \in \mathcal{P},$\ where\ b\ is\ a boundary end with limited I/O request: $$
+%\tilde{b} \Rightarrow b^\sharp > 0\ \wedge \  b'^\sharp\ = \  b^\sharp - 1 $$
+%\end{axiom}
+%%%%%
+\begin{axiom}[Grounding axiom]
+\label{ax:grnd}
+Let $B \subset N$ be the set of boundary nodes in a Reo network. The following predicate rules out the solutions that are only present for future expansion of the network:
+$\forall b \in B: b^{!^\circ}\ \Rightarrow\ b^{!^\bullet}$.
+\end{axiom}
+
+Solutions of the RCSP will represent semantics of the corresponding Reo network, but they will be specified in a form of equations which are much harder to interpret than an equivalent automata-based semantics. 
+To tackle this issue, we introduce a new form of automata-like semantics for Reo, which we call Reo Labeled Transition System (RLTS). 
+The purpose of the RLTS is to compactly represent solutions of RCSPs for LTS visualization, model checking and simulation. Unlike RCSP or constrain automata, it is not compositional, i.e., no compositional product operator is defined.
+
+%\subsection{RLTS}
+
+\subsection{Solving RCSP}
+Given a Reo  network, its RCSP can be obtained by traversing the network and conjuncting the constraint encodings of its primitives. 
+%Let \emph{primitives(R)} be a set of Reo primitives that belong to $R$ Reo network, \emph{type} be a function from Reo primitves to their type, \emph{getPorts} be a function that is applied on a \emph{primitive} and returns the set of its ports,  \emph{isAdjacent}$\ : \ Primitives\ \times\ Primitives\ \times\ Boolean$ returns \emph{true} if the input primitives are directly connected, \emph{encoding} be a function that returns the behavioral encoding of a given Reo primitive in terms of constraint presented in Table \ref{tab:contextencodingprioadded2}, where the part of constraints relevant to data, context, or priority is discarded if there is no primitive in the network that is sensitive to one of these behavioral aspects, respectively, \emph{isBoundaryNode} returns \emph{true}, if it is applied on a Reo node that is of type \emph{boundary},  \emph{getVariables} be a function that when applied on a constraint, it returns the set of all variable names used in it, \emph{getFIFOVariables} is a function that is applied on a constraint and returns only the state memory variabes,  \emph{getRWVariables} is applied on a constraint and returns the set of variables that belong to \emph{Reader} and \emph{Writer} components, \emph{isFull} is applied on a primitive of the type \emph{FIFO} and returns true iff it is full, and \emph{requests} is applied on a \emph{Reader} or \emph{Writer} and returns the number of I$\/$O requests that it can performs (-1 if it is unlimited). ???????Algorithm \ref{alg:genrcsp} shows how to generate RCSP of a given Reo network.
+%
+%Lines 1-8 initialize the following variables: 
+%$ports$: the set of the ports, $fifoStates$: a set to contain the states of the network's \emph{FIFO} channels, $rwStates$: the states of \emph{reader} and \emph{writer} components, 
+%$visited$: the set of visited states, $dataAwares$, $???$, $???$: the set of all \emph{filter} and \emph{transformer}, \emph{priority synchronous}, 
+%$\Psi$: the constraint encoding the behavior of the network \emph{R} ????
+%
+%%%It is to obvious \input{alggenrcsp}
+%
+%
+%Composition TODO ?????
+%
+ The procedure to solve an RCSP is presented in Algorithm \ref{alg:solvercsp}. It takes a Reo connector and its RCSP and outputs the solutions set of the RCSP and the initial state of the connector. %We use this to construct RLTS.
+
+First, the algorithm initializes the global variables that keep the states of FIFO channels (\emph{fifoStates}), the states to explore (\emph{toExplore}), and the visited states (\emph{visited}) (lines 1-4). While \emph{toExplore} is not empty, $\Psi$ is updated with the current state and its conjunctive normal form (CNF) is produced for computing the solutions of the Boolean predicates (lines 5-11). %Solutions are validated to see if they respect \emph{boundedReqs} limits (lines 13-20). The numeric constraint of a valid solution is obtained by substituting the computed value of each Boolean variable in the constraint (lines 21-25). If the numeric constraint has a valid solution, the next state of the \emph{FIFO} channels, $state'_{M}$ is calculated from the solution of the boolean constraint. Then, \emph{boundedReqs} is updated with respect to the transition. 
+The $\langle state' \rangle$ indicates the new state of the connector and if it is not already explored or queued to be processed, it gets added to the list of states to be explored (lines 12-15). 
+Finally, the set of solutions is updated with the current solution (line 17). The output of the algorithm is the set of solutions and the initial state.
+
+%\vspace{-2cm}
+%\IncMargin{1em}
+\begin{algorithm}
+%\KwData{this text}
+%\KwResult{how to write algorithm with \LaTeX2e }
+\SetKwData{Left}{left}\SetKwData{This}{this}\SetKwData{Up}{up}
+\SetKwFunction{Union}{Union}\SetKwFunction{FindCompress}{FindCompress}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\Input{A Reo network $R$ and its RCSP $\psi$}
+\Output{Solutions for the given RCSP}
+\BlankLine
+%/*Initialization*/\\
+fifoStates $\leftarrow$ initial states of FIFOs from the given RCSP\; 
+%\{\langle fifo, isFull(fifo)\rangle~|~fifo \in primitives(R) \  \wedge \ type(R) == FIFO \}$TODO from input??????\;
+%boundedReqs $\leftarrow \{\langle n, requests(n)\rangle~|~n \in isBoundaryNode(R) \ \wedge requests(n) > -1 \}$\;
+$state_0$ $\leftarrow$ \{$\langle$ fifoStates $\rangle$\}\;
+toExplore $\leftarrow$ \{$state_0$\}\;
+visited $\leftarrow$ \{\}\;
+\While{(toExplore $\neq$ \{\})}
+{
+   state $\leftarrow$ toExplore.pop()\;
+   visited $\leftarrow$ visited $\cup$ \{state\}\;
+   /* Conjunctive normal form of $\psi$ with updated state */\\
+    cnf $\leftarrow$ updateStateAndMakeCNF($\psi, state$) \;
+   /* Boolean solution in terms of $\langle$var, val$\rangle$ */\;
+   $solutions_B \leftarrow$ solve(cnf)\;
+   \For {$sol_B \in solutions_B$}{
+   $state'$ $\leftarrow $ next  state of 
+   FIFOs extracted from $sol_B$\;
+\If{state' $\not \in$ visited \textbf{and} state' $\not \in$ toExplore}{
+toExplore $\leftarrow$ toExplore $\cup$ \{state'\};}
+solutions $\leftarrow$ solutions $\cup$ \{$\langle$state, $sol_B$, state'$\rangle$\};
+   }
+	output $\leftarrow$ \{solutions, $state_0$\};
+    %7\;
+}
+\BlankLine
+ \caption{Finding solutions for a given RCSP}
+ \label{alg:solvercsp}
+\end{algorithm}
+\DecMargin{1em}
+%\subsection{From RCSP solutions to Reo LTS}
+%In this section, we illustrate our approach in creating CA annotated CA with priority information. 
+%This extends our presented procedure in  \cite{behconstraint} to construct CA from the set of solutions $S$ for an RCSP $\langle \mathcal{P}, \mathcal{M}, M_0,  \mathcal{V}, C \rangle$ as:
+%
+%\begin{definition}[Solutions set $\mathfrak{S}$]
+%Formally a solution for $\Psi=\langle $$\mathcal{N}_{\Psi}, $$\mathcal{M}_{\Psi},$ $M_{\Psi 0}, $$\mathcal{V}_{\Psi},$ $C_{\Psi}$ $\rangle$ is a (partial) function from $\mathcal{V}_{\Psi}$ to the set of binary values $\{\top, \bot\}$. We call the set of all solutions for $\Psi$ as $\mathfrak{S}$.
+%\end{definition}
+%
+%To ease discussion, we define few operations on a solution $s$ for $\Psi=\langle $$\mathcal{N}_{\Psi}, $$\mathcal{M}_{\Psi},$ $M_{\Psi 0},$ $\mathcal{V}_{\Psi},$ $C_{\Psi}$ $\rangle$: 
+% source($s$)=$\langle\{m|m^\circ \in \mathcal{M}_{\Psi}: s(m^\circ)=\top\}\rangle$, target($s$)=$\langle$$\{m|$ $m'^\circ$$ \in \mathcal{M}_{\Psi}: $$s(m'^\circ)=\top\}\rangle$, flow($s$)=$\{n|n \in \mathcal{N}_{\Psi}: s(\tilde{n})=\top\}$, reason-giving($s$)=$\{n|n \in \mathcal{N}_{\Psi}: s(n^\triangleright)=\top\}$. We say $s \backsim \longtransition{q}{N,R}{p}$, where q=source(s), N=flow(s), R=reason-giving(s), p=source(s).
+ \begin{definition}[Reo Labeled Transition System]
+\label{def:rlts}
+A Reo Labeled Transition System (RLTS) is a tuple $\mathcal{RLTS}$ $=$ $($$\mathcal{N},\ $$ \mathcal{P},\  \mathcal{M}, 
+ \ $$Q,\ $$\rightarrow,$$\ q_0)$, where:\\
+%
+%\begin{itemize}
+%\item 
+$\bullet$ $\N$ is a set of ends, \\
+$\bullet$  $\mathcal{P} \subseteq \mathcal{N}$ is a set of ends with priority, \\
+%\item $\mathcal{B} \subseteq \mathcal{N}$ is a set of boundary port names that are associated with a limited number of I/Os,
+%\item $\mathcal{M}$ is a set of state memories, % representing the values of primitives with non-empty states (e.g. value stored in a full \emph{FIFO}), 
+$\bullet$ $\mathcal{M}$ is a set of state memory variables,\\
+%,
+%
+$\bullet$ $Q$ is a (finite) set of states of the form $\langle M %{\leftarrow}%, B^{\leftarrow}
+\rangle$, $M$ is the set of state memory variables that hold in the given state, \\%full \emph{FIFO}$_1$ at each state,\\ %^{\leftarrow}: \mathcal{M} \pto \{\top\}$ (a finite data domain),% and $B^{\leftarrow} : \mathcal{B} \rightarrow \mathbb{N}_0$ (set of natural numbers and zero),
+$\bullet$  $\mathord{\rightarrow} \subseteq Q \times 2^{\N} \times 2^{\N}  \times Q$ is a transition relation, wherein $(N_1, N_2)$ represent the ends with and those without data flow for which the reason for no flow is the end not being ready for interaction. However, $n \not \in N_1$ does not necessarily imply $n \in N_2$ as $n$ may be ready but the network provides it with data flow (therefore, $n$ requires a reason for no flow), \\ 
+$\bullet$  $q_0 \in Q$ is the initial state.\\
+%\end{itemize}
+
+We write $\longtransition{q}{N_1,N_2}{p}$ instead of $(q,$ $N_1,$ $N_2,$ $p)$ $\in$ $\mathord{\rightarrow}$. For all transitions $\longtransition{q}{N_1,N_2}{p}$:
+$n \in \mathcal{P}, n \notin N_2 \Leftrightarrow n \in N_1$. 
+\end{definition}
+%
+% In a transition $\longtransition{q}{N_1,N_2,g}{p}$, $N_1$ denotes the port names that are not participating in the transition and they are providing a reason for it (recall connector coloring semantics), while $N_2$ is the set of port names that are participating in the transition. Note that there can be port names such as $p : p \notin N_1 \wedge p \notin N_2$ meaning that $p$ is not participating in the transition and the reason for no-flow and it requires a reason for no-flow. 
+ The definition above resembles \emph{guarded automata}~\cite{Bonsangue2012685}, an automata-based model for context-sensitive Reo. 
+%TODO explain what is similar
+ Below we present an algorithm to solve a RCSP and construct the corresponding RLTS out of its solutions. 
+For instance, the RLTS for a network consisting of a \emph{priority}  and a \emph{block source sync} channel 
+
+ %\vspace*{-.3cm} 
+ \tikz{
+ %prio
+   %  \begin{scope}[scale=0.8]
+ 			  % \node[point,label=left:$e$] at (0,0) (EA1) {};
+          	   \node[point,label=left:$$] (A) {};
+               %\node[point,below of=A,label=below:$1$] (A) {};
+            %    \node[label=below:$1$] (A) {};
+               \node[point,label=below:$1$] at (.8,0) (EB1) {};
+               \node[point,label=below:$2$] at (1.2,0) (EB2) {};
+                 \node[point,label=below:$1$] at (2,0) (EC1) {};
+               \node[point,label=below:$2$] at (0,0) (EA2) {};
+           	   \node[point,right of=A,label=above:$B$, node distance=1cm] (B) {};
+               \node[point,right of=B,label=right:$$, node distance=1cm] (C) {};
+               \node[left of=A,label=left:$A$, node distance=.2cm] (LA) {};
+               \node[below of=B,label=right:$$, node distance=.2cm] (LB) {};
+               \node[right of=C,label=right:$C$, node distance=.2cm] (LC) {};
+           	   \draw[psync] (A) -- (EB1);
+           	   %\node[] at (.45,0) {$!$};
+               \draw[sync] (EB2) -- (C);
+               \node[] at (1.5,0) {$)$};
+               \draw [-, thick] (.8,0) -- (1,0);
+               \draw [-, thick] (1,0) -- (1.2,0);
+               \draw [-, thick, fill=white] (B) circle (2pt);
+               %\end{scope}
+               }
+               
+               is as 
+               
+             %  \scriptsize
+%\sub figure[\scriptsize{CA-based semantic model}]{
+     \tikz{
+         % \begin{scope}[scale=0.8]
+          \node[text width=0cm, circle, draw] at (0,0)(la) {};
+          \node at (0,-.5)(lbl) {P=\{$A_2,AB_{1,2},B_{1,2},BC_{1,2},C_1$\}};
+          \path[transition]
+          (la) edge [loop] node[above] {N$_1$:\{$A_2,AB_{1,2},B_{1,2},BC_{1,2},C_1$\}, $N_2:\emptyset$} (la)
+      %   \end{scope}
+       }
+. % where the transitions with empty firing nodes are not shown for simplicity.
+
+\begin{definition}[Composition $\boxdot$]
+\label{def:composition}
+We define the composition of $L_1=($$\mathfrak{N}_1,$$\mathcal{P}_1,$$\mathcal{M}_1,$ $Q_{1},$$\rightarrow_1,$$ q_{0_1})$ and $L_2=($ $\mathfrak{N}_2,$ $\mathcal{P}_2,$ $\mathcal{M}_2$, $Q_{2},$ $\rightarrow_2,$ $q_{0_2})$ as:
+
+$L_1\boxdot L_2=(\mathcal{N}_1\cup \mathcal{N}_2,\mathcal{P}_1\cup \mathcal{P}_2,$ $\mathcal{M}_1 \cup \mathcal{M}_2$, $\rightarrow, q_{0_1}\times q_{0_2})$, where $\rightarrow$ is defined as:
+
+$\frac{\longtransitionno{q_1}{N_1,R_1}{1}{p_1} \longtransition{q_2}{N_2,R_2}{2}{p_2}\ \ N_1\cap \mathfrak{N}_2 = N_2\cap \mathfrak{N}_1\ \ (N_1 \cup N_2)\cap (R_1 \cup R_2)=\emptyset}{\longtransition{q_1\times q_2}{N_1 \cup N_2,R_1\cup R_2}{p_1 \times p_2}}$ 
+
+$\frac{\longtransitionno{q_1}{N_1,R_1}{1}{p_1} \longtransitionno{q_2}{N_2,R_2}{2}{p_2}N_1 \cap \mathfrak{N}_2=\emptyset}{\longtransition{q_1\times q_2}{N_1,R_1}{p_1 \times q_2}}$, and its symmetric rule.%$\frac{\longtransitionno{q_1}{N_1,R_1}{1}{p_1}\longtransitionno{q_2}{N_2,R_2}{2}{p_2}N_1 \cap \mathfrak{N}_2=\emptyset}{\longtransition{q_1\times q_2}{N_2,R_2}{q_1 \times p_2}}$
+\end{definition}
+
+To ease discussion, we define the following operations on a solution $s$ for $\Psi=\langle $$\mathcal{N}_{\Psi}, $$\mathcal{M}_{\Psi},$ $M_{\Psi 0},$ $\mathcal{V}_{\Psi},$ $C_{\Psi}$ $\rangle$: 
+ source($s$)=$\langle\{m|$ $m^\circ$ $\in \mathcal{M}_{\Psi}: s(m^\circ)=\top\}\rangle$, target($s$)=$\langle$$\{m|$ $m'^\circ$$ \in \mathcal{M}_{\Psi}: $$s(m'^\circ)$ $=\top\}\rangle$, flow($s$)=$\{n|n$ $\in$ $\mathcal{N}_{\Psi}: s(\tilde{n})=\top\}$, reason-giving($s$)= $\{n|n \in \mathcal{N}_{\Psi}: s(n^\triangleright)=\top\}$. We say $s \backsim \longtransition{q}{N,R}{p}$, where q=source(s), N=flow(s), R=reason-giving(s), p=source(s).
+
+\begin{definition}[Visualization function $\gamma$]
+The visualization function $\gamma$ on $\Psi=\langle $$\mathcal{N}, $$\mathcal{M},$ $M_{0},$ $\mathcal{V}$, $C$$\rangle$ %, which has a set of solutions $S_{\Psi}$ and the initial state $s_{\Psi 0}$, 
+yields $\mathcal{L}$$=$$($$\mathcal{N},$$\mathcal{P}, \mathcal{M},$$Q,$$\rightarrow,$$q_0)$, where %where $S_{\Psi}$ is the set of solutions for $\Psi$,
+%\begin{itemize} 
+%  \item 
+$\mathcal{P}=\{n|n\in \mathcal{N},\exists s\in \mathfrak{S}(\Psi):s(n^{!^\circ})=\top \vee s(n^{!^\bullet})=\top\}$, 
+$\mathcal{M}=\{m|s(m^\circ)=\top \vee s(m'^\circ)=\top, s\in \mathfrak{S}(\Psi)\}$,
+$Q=\bigcup_{s\in \mathfrak{S}(\Psi)}$\{source(s), target(s)\}, $\rightarrow=$ $\{(source(s),$ $flow(s), $ $\text{reason-giving}(s)$, $target(s))$ $|s\in \mathfrak{S}(\Psi)\}$, $q_0$$=source(s_0)$.
+%\end{itemize} 
+% we map each solution $s \in S_{\Psi}$ into a transition $\longtransition{q}{N, R}{p}$ as follows: 
+%\begin{itemize}
+%	\item $q = \langle\{\Rightarrow_M, \Rightarrow_B \rangle
+%    ~|~ m \in \mathcal{M}, s\left(\mathring{m}\right) = \top \}\rangle$,
+%	\item $p = \langle\{m ~|~ m \in \mathcal{M}, s\left(\mathring{m}'\right) = \top \}\rangle$,
+	%\item $\mathcal{N} = \{n ~|~ n^c \in \mathcal{P} \vee n^k \in \mathcal{P} \}$,
+	%\item 
+ % we map each solution $s \in S_{\Psi}$ into a transition $\longtransition{q}{N, R}{p}$ as follows: 
+%
+ % $N =  \{ n ~|~ n \in \mathcal{N}, s_b\left(\tilde{n}\right) = \top \}$,%\{ n ~|~ n_c \in \mathcal{P} \vee n_k \in \mathcal{P}, s\left(\tilde{n}\right) = \top \}$,
+	%\item
+  %  $R =  \{ n ~|~ n \in \mathcal{N}, s_b\left(\tilde{n}\right) = \bot \wedge s_b\left(n^\triangleright\right) = \top\}$,%\{ n ~|~ n_c \in \mathcal{P} \vee n_k 
+	%\item The data constraint $g$ is (a syntactic variant of) $s_d$. 
+%\end{itemize} 
+%
+%Let ${\rightarrow_{\Psi}}$ be the set of all transitions generated above. Then,  
+%\begin{itemize}
+%	\item $\mathcal{N} = N_{rcsp}$,%\{n ~|~ n \in N \wedge \longtransition{q}{N, R, g}{p} \in S^{\rightarrow}\}$,
+	%\item 
+ %
+%	\item $\mathcal{B} = \{n ~|~ n \in dom(s_{0_B}) \wedge s_{B_0}(n) > 0 \text{ where } \langle s_{M_0}, s_{B_0} \rangle = s_0 $,%\text{ and } \mathcal{N} \wedge \longtransition{q}{N, R, g}{p} \in S^{\rightarrow}\}$,
+  %  \item $\mathcal{M} = \mathcal{M}_{rcsp}$,
+    %\item
+   %,
+  %  \item $\rightarrow = S^{\rightarrow}$, 
+%	\item $q_0 = s_0$.%\langle\{m~|~ m ???\in M_0, s(\mathring{m}) = \top \}\rangle$, 
+	%is the state with the state memory variables like $m$ that $s_{b0}(\mathring{m})=\top$ and $s_{b0}$ is the first calculated solution for $C_B$,
+%\end{itemize}
+\end{definition}
+%Note that $\mathcal{M}$ indicates values stored in states. 
+%To construct the priority relation we need to consider two transitions. 
+%Let $\langle s, s_d \rangle \in S$ and $\langle s', s'_d \rangle \in S$ be two distinct solutions with corresponding transitions $t : \longtransition{q}{N, g}{p}$ and $t' : \longtransition{q}{N', g'}{p'}$. We conclude that $t$ has more priority than $t'$ if the following conditions hold for a node end $n$ belonging to the node $m$:
+%
+%$$(s(\tilde{m}) = \bot \wedge s'(\tilde{m}) = \top) \wedge 
+% (s(n^{!^\circ}) = \top \vee s(n^{!^\bullet}) = \top) \wedge 
+% (s'(n^{!^\circ}) = \bot \wedge s'(n^{!^\bullet}) = \bot)$$ % \wedge $$
+%$$ n^{c^\triangleright} = \top \vee n^{k^\triangleright} = \top$$
+%Applying the above procedure to the solutions of RCSPs constraints generates their corresponding CA.
+ %??? The logic with constraints over boolean variables, plus equality constraints over data flow variables, arbitrary terms (beyond the flat Data domain), and top-level existential quantifiers is decidable and in NP [50].
+
+\begin{theorem}%[Compositionality]
+Let $\Psi_{1}$ and $\Psi_{2}$ be two RCSPs, we show that $\gamma(\Psi_1 \odot \Psi_2) = \gamma(\Psi_1) \boxdot \gamma(\Psi_2)$.
+\end{theorem}
+\begin{proof}
+Let $\gamma(\Psi_1)$=$(\mathfrak{N}_1,$$P_1,$ $\mathcal{M}_1,$ $Q_1,$ $\rightarrow_1,q_{0_1})$,  $\gamma(\Psi_2)$= $($$\mathfrak{N}s_2,$ $P_2,$ $\mathcal{M}_2,$ $Q_2,$ $\rightarrow_2,q_{0_2})$, $\gamma(\Psi_1 \odot \Psi_2)$=$(\mathfrak{N},$$P,$$Q,$$\rightarrow,q_{0})$.
+
+It is trivial to see that $\mathfrak{N}=\mathfrak{N}_1 \cup \mathfrak{N}_2$, $P=P_1 \cup P_2$, $\mathcal{M}=\mathcal{M}_1 \cup \mathcal{M}_2$, $Q=Q_1 \times Q_2$, $q_0=q_{0_1} \times q_{0_2}$. %We proof the rest by contradiction as follows: 
+Assume $\exists s \in \mathfrak{S}(\Psi_1 \odot \Psi_2)$, $s_1,\in \mathfrak{S}_1$, $s_2 \in \mathfrak{S}_2$, $t_1:\longtransitionno{q_1}{N_1, R_1}{1}{p_1}$, $t_2:\longtransitionno{q_2}{N_2, R_2}{2}{p_2}$ s.t. $s_1 \backsim t_1$ and $s_2 \backsim t_2$, but $\nexists \  t:\longtransition{q}{N,R}{p} \in \rightarrow$ s.t. $s \backsim t$. %Based on definition ??, t
+This means that $N_1 \cap \mathfrak{N}_2 \neq N_2 \cap \mathfrak{N}_1 \wedge N_1 \cap \mathfrak{N}_2 \neq \emptyset$ or $(N_1\cup N_2)\cap(R_1\cup R_2)\neq\emptyset$. The latter is impossible. For the former,  %So, $\forall n \in N_1 \cap Nodes_2 \implies n \in Nodes_1 \cap Nodes_2$. 
+%So,
+either
+$n \in N_1, n \notin N_2$ or $n \in N_2, n \notin N_1$, which is not possible because it means $s(n)=\top \wedge s(n)=\bot$.
+
+Similarly, we can show that it is not possible to have a transition $t$ in $\gamma(\Psi_1 \odot \Psi_2)$, but have no $s \in \mathfrak{S}$ s.t. $s \backsim t$.
+%$\exists transition in product, s \vDash C_1 s \vDash C_2 but s \not \vDash c_1 \wedge C_2 !!!! ????$
+%Let $t_1$ $\in$ $\rightarrow_1$ and $t_2$ $\in$ $\rightarrow_2$ that are transitions belonging to $\gamma(\Psi_1)$ and $\gamma(\Psi_2)$, respectively.
+%Based on the definition, $\gamma(\Psi_1 \odot \Psi_2)$$=(N,P,Q,$$\rightarrow,q_0)$, where $N=\{n|\tilde{n} \in \mathcal{N}_{1} \cup \mathcal{N}_{2}\}$, $P=\{n|n^{!^\circ}, n^{!^\bullet} \in \mathcal{N}_{1} \cup \mathcal{N}_{2} \wedge \exists s \in S_{\Psi_1 \times \Psi_2} : s(n^{!^\circ}) \vee s(n^{!^\bullet})\}$, $Q = \bigcup_{s \in S_{\Psi_1 \times \Psi_2}} \{source(s)$ $,$ $target(s)\}$,
+%$\rightarrow=$$\{(source(s),$ $flow(s), $ $ \text{reason-giving}(s),$ $target(s))$ $|s\in S_{\Psi}\}$
+%
+%WIPPPPPPP
+%
+%On the other hand $\Psi_1 \odot \Psi_2=$$\langle $ $\mathcal{N}_{1}\cup \mathcal{N}_{2}, $ $\mathcal{M}_{1} \cup \mathcal{M}_{2},$ $ M_{0_1} \times M_{0_2}???, $ $\mathcal{V}_{1} \cup \mathcal{V}_{2},$ $C_{1} \wedge C_{2}$ $\rangle$. 
+%
+%Therefore, $\gamma(\Psi_1 \odot \Psi_2)$=$(N_1\cup N_2,P_1 \cup P_2,M_1 \cup M_2,Q_1 \cup Q_2,$$\rightarrow_1 \cup \rightarrow_2,q_{0_1} \times q_{0_2})$
+ %It is trivial to show the correctness of this theorem using definition $\odot$ and $\boxdot$
+%%%For all $s \in \mathfrak{S}_{\Psi_1 \odot \Psi_2}$, we have $s \vDash \Psi_1 \wedge s \vDash \Psi_2$, dom(s) $\in N_1 \cup N_2$, $v \in $dom($N_1 \cup N_2$)$\rightarrow s()$ $ \text{flow}(s) $ 
+\end{proof}
+%Algorithm \ref{alg:makerlts} 
+%\begin{algorithm}
+% \caption{Algorithm to construct a Reo LTS from a RCSP solutions}
+% \label{alg:makerlts}
+%\end{algorithm}
+%%%%%
+%
+%\begin{definition}[Composition????]
+%\label{def:composition}
+%The composition of two RCSPs $\rho_1=\langle $$\mathcal{P}_1, $$\mathcal{M}_1,$$ M_{0,1}, \mathcal{V}_1, C_1 \rangle$ and $\rho_2=\langle $$ \mathcal{P}_2, $$\mathcal{M}_2,$$ M_{0,2}, \mathcal{V}_2,$$ C_2 \rangle$ is defined as follows:
+%$$\rho_1 \odot \rho_2=\langle \mathcal{P}_1 \cup \mathcal{P}_2, \mathcal{M}_1 \cup \mathcal{M}_2, M_{0,1} \cup M_{0,2}, \mathcal{V}_1 \cup \mathcal{V}_2, C_1 \wedge C_1 \rangle$$
+%\end{definition}
+% to model multi-level priority. (I can imagine this is not very clear I will explain more)

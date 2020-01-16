@@ -1,0 +1,14 @@
+*.aux
+ztezmain.pdf
+ztezmain.bbl
+ztezmain.blg
+ztezmain.lof
+*.log
+ztezmain.lol
+ztezmain.lot
+ztezmain.out
+ztezmain.synctex.gz
+ztezmain.toc
+*.pdf
+.fuse_hidden0000008b00000003
+.fuse_hidden0000008b00000004

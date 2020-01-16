@@ -1,0 +1,165 @@
+\documentclass{harward-thesis}
+\usepackage{graphicx}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{wrapfig,lipsum,booktabs}
+\usepackage{placeins}
+\usepackage{amssymb}
+\usepackage{afterpage}
+\usepackage{upgreek}
+\usepackage{longtable}
+\usepackage{tikz}
+\usepackage{reo-tikz}
+\usetikzlibrary{shapes.geometric}
+\usepackage[linesnumbered,lined]{algorithm2e}
+\usepackage{pgfplots}
+\usepackage{titling}
+\usepackage{authblk}
+\usepackage{makecell}
+\usepackage{amsmath}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{array}
+\usepackage{floatrow}
+\floatsetup[table]{capposition=top}
+\usepackage{booktabs}
+\usepackage{pdflscape}
+\usepackage{longtable}
+\usepackage{etex}
+\usepackage{lipsum}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage{subfig}
+\usepackage{tikz}
+\usepackage{reo-tikz}
+\usepackage{tikz-bpmn}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{upgreek}
+\usepackage{romanbar}
+\usepackage{tabularx}
+\usepackage{color}
+\usepackage{placeins}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{dsfont}
+\usepackage{amsbsy}
+\usepackage{amstext}
+\usepackage{amscd}
+\usepackage{amsxtra}
+\usepackage{pgf}
+\usepackage{amsfonts, lacromay}
+\usetikzlibrary{chains, fit, shapes,matrix,decorations.shapes}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{syntax}
+\usepackage[english]{babel}
+\usetikzlibrary{shapes.multipart}
+\usetikzlibrary{shapes.geometric,positioning,calc,arrows,snakes}
+\usepackage{chngcntr}
+\usetikzlibrary{arrows,shadows} % for pgf-umlsd
+\usepackage{stmaryrd} %cross product
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{etoolbox}
+\floatstyle{plain}
+\floatname{program}{Listing}
+\usepackage{mathrsfs}
+\usepackage[underline=true,rounded corners=false]{pgf-umlsd}
+\usetikzlibrary{arrows, decorations.markings}
+\usetikzlibrary{shapes.geometric,calc}
+\usepackage{tikz}
+\usetikzlibrary{arrows, shapes, trees, positioning, decorations.markings, patterns} 
+\usepackage{bpmn-events}  
+\usepackage{bpmn-gateways}
+\usepackage{fancyvrb}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{array}
+\usepackage{tikz,amsmath, amssymb,bm,color}
+\usetikzlibrary{circuits.logic.US,circuits.logic.IEC,fit}
+\newcommand\addvmargin[1]{
+  \node[fit=(current bounding box),inner ysep=#1,inner xsep=0]{};
+}
+\newtheorem{BehAxiom}{Axiom}[section]
+\newtheorem{BehExample}{Example}[section]
+\newenvironment{proof}[1][Proof]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}]}{\end{trivlist}}
+\newcounter{examplecounter}
+\newenvironment{BehExample3}{%\begin{quote}%
+\noindent
+ %   \refstepcounter{examplecounter}%
+  \textbf{Example \thechapter-\arabic{examplecounter}}%
+  \quad
+}{%
+}
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+
+\makeatletter
+\let\my@chapter\@chapter
+\renewcommand*{\@chapter}{%
+  \addtocontents{lol}{\protect\addvspace{10pt}}%
+  \my@chapter}
+\makeatother
+\begin{document}
+\title{Constraint-Based Analysis of Business Process Models}
+\author{Behnaz Changizi}
+\maketitle
+\tableofcontents
+\input{tezcommands}
+\input{tezbpmncommands}
+\newsavebox\behbox
+\begin{lrbox}{\behbox}
+\begin{tikzpicture}
+\node[rectangle,draw](a){x};
+\end{tikzpicture}
+\end{lrbox}
+\usepackage[Lenny]{fncychap}
+\usepackage{tocloft}
+\lstlistoflistings
+\listoffigures 
+\listoftables
+%\renewcommand{\thechapter}{\Alph{chapter}}
+\chapter{Introduction}
+\input{icsea01intro}
+\chapter{Business Process Model and Notation}
+\label{ch:bpmn}
+\chaptermark{BPMN}
+\input{bpmnintro}
+\chapter{Reo Coordination Language}
+\label{ch:reo}
+\input{reo}
+\chapter{Formal Semantics for Reo}
+\label{ch:formsem}
+\input{tez03semantics}
+\input{complexity}
+\chapter{Mapping BPMN to Reo}
+\chaptermark{Mapping BPMN to Reo}
+\label{ch:mapping}
+\input{simplifybpmn}
+\chapter{A Constraint-Based Semantics Framework for Reo}
+\label{chapterCASM}
+\chaptermark{CASM}
+\input{casmicsea01intro}
+\chapter{Priority}
+\label{ch:prio}
+\input{pr}
+\chapter{Conclusion}
+\label{ch:concl}
+\input{conclusion}
+\clearpage
+\addcontentsline{toc}{chapter}{References}
+\bibliographystyle{alpha}%odd apalike
+\bibliography{tezthesisref}
+%Check TODO.txt
+\end{document}
+%%%%%%%%%%%%%%% Example
+%https://www.overleaf.com/project/5d91190c2a19c800010a5188
