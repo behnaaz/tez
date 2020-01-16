@@ -1017,7 +1017,7 @@ As the results show our approach can handle bigger models compared to the existi
 \subfloat[Time (s), single solution \label{ax:onesol}]{%
 \pgfplotsset{width=6cm,compat=1.5}
 \begin{tikzpicture}
-\begin{axis}[legend pos=north west][
+\begin{axis}[%legend pos=north west][
     %title={Time for finding a single solution for a N-Sequencer},
     xlabel={N},
     ylabel={Time (Seconds)},
@@ -1027,8 +1027,8 @@ As the results show our approach can handle bigger models compared to the existi
    % ytick={0,20,40,60,80,100,120},
     legend pos=north west,
     ymajorgrids=true,
-    grid style=dashed,
-    legend style={font=\fontsize{40}{50}\selectfont}, 
+    grid style=dashed
+%    legend style={font=\fontsize{40}{50}\selectfont}, 
 ]
 \addplot[
     color=blue,
@@ -1056,7 +1056,7 @@ As the results show our approach can handle bigger models compared to the existi
 \subfloat[Size of the RCSP \label{ax:conssize}]{%
 \pgfplotsset{width=6cm,compat=1.5}
 \begin{tikzpicture}
-\begin{axis}[legend pos=north west][
+\begin{axis}[
    % title={Size of the RCSP constraints for a N-Sequencer},
     xlabel={N},
     ylabel={Constraint size (bytes)},
@@ -1067,7 +1067,8 @@ As the results show our approach can handle bigger models compared to the existi
     legend pos=north west,
     ymajorgrids=true,
     grid style=dashed,
-    legend style={font=\fontsize{40}{50}\selectfont},
+   % legend style={font=\fontsize{40}{50}\selectfont},
+    yticklabel style={/pgf/number format/fixed}, scaled ticks=false
 ]
  
 \addplot[
@@ -1098,7 +1099,7 @@ As the results show our approach can handle bigger models compared to the existi
 \subfloat[Time (s), calculating the RLTS \label{ax:total}]{%
 \pgfplotsset{width=6cm,compat=1.5}
 \begin{tikzpicture}
-\begin{axis}[legend pos=north west][
+\begin{axis}[%legend pos=north west][
    % title={Calculating the RLTS of N-Sequencer},
     xlabel={N},
     ylabel={Time (Seconds)},
@@ -1108,8 +1109,8 @@ As the results show our approach can handle bigger models compared to the existi
    % ytick={0,20,40,60,80,100,120},
     legend pos=north west,
     ymajorgrids=true,
-    grid style=dashed,
-    legend style={font=\fontsize{40}{50}\selectfont}, 
+    grid style=dashed
+ %   legend style={font=\fontsize{40}{50}\selectfont}, 
 ]
  
 \addplot[
@@ -1139,7 +1140,7 @@ As the results show our approach can handle bigger models compared to the existi
 \subfloat[Time (s), building CA and connector coloring table \label{ax:caccsol}]{%
 \pgfplotsset{width=6cm,compat=1.5}
 \begin{tikzpicture}
-\begin{axis}[legend pos=north west][
+\begin{axis}[%legend pos=north west][
     %title={Time spent to calculate the coloring semantics of a N-Sequencer},
     xlabel={N},
     ylabel={Time (Seconds)},
@@ -1150,7 +1151,7 @@ As the results show our approach can handle bigger models compared to the existi
     legend pos=north west,
     ymajorgrids=true,
     grid style=dashed,
-    legend style={font=\LARGE},
+%    legend style={font=\LARGE},
 ]
 \addplot[
     color=blue,
