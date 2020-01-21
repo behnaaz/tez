@@ -8,6 +8,7 @@
 \RequirePackage{verbatim}
 
 \usepackage{graphicx}
+\usepackage{textpos}
 \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{wrapfig,lipsum,booktabs}
@@ -41,7 +42,7 @@
 \usepackage{reo-tikz}
 \usepackage{tikz-bpmn}
 \usepackage{graphicx}
-\usepackage{multirow}
+\usepackage{multicol}
 \usepackage{upgreek}
 \usepackage{romanbar}
 \usepackage{tabularx}
@@ -170,7 +171,6 @@
 
 \newcommand{\babstractpage}{
 	\newpage
-	\pagenumbering{roman}
 	\setcounter{page}{3}
 	\pagestyle{fancy}
 	\lhead{Promotor: \@advisor} \rhead{\@author}
@@ -255,7 +255,6 @@
     urlcolor=black,
 }
 
-
 % colors
 \RequirePackage{color}
 %\definecolor{Crimson}{rgb}{0.6471, 0.1098, 0.1882}
@@ -284,6 +283,10 @@
 }
 \makeatother
 \begin{document}
+\input{jeld}
+\pagestyle{empty}
+\afterpage{\null\newpage}
+\newpage
 \title{Constraint-Based Analysis of Business Process Models}
 %\thispagestyle{empty}
 \pagestyle{empty}
@@ -306,28 +309,22 @@
 \end{tikzpicture}
 \end{lrbox}
 
-
-
-
+\pagestyle{empty}
 %\thispagestyle{empty}
 %\pagenumbering{roman}
 %\setcounter{page}{1}
 
 \thispagestyle{empty}
 \lstlistoflistings
-%\clearpage
+\clearpage
 
 \thispagestyle{empty}
-%\pagestyle{empty}
+\pagestyle{empty}
 \listoffigures 
-%\clearpage
+\clearpage
 
 
-\thispagestyle{empty}
-%\pagestyle{empty}
 \listoftables
-%\clearpage
-
 
 \onehalfspacing
 
@@ -335,10 +332,6 @@
 \clearpage
 
 \mainmatter
-%\pagestyle{plain}
-%\pagenumbering{arabic}
-%\setcounter{page}{1}
-%\renewcommand{\thechapter}{\Alph{chapter}}
 \chapter{Introduction}
 \input{icsea01intro}
 \chapter{Business Process Model and Notation}
@@ -389,4 +382,5 @@ I give special thanks to my family and friends for lifting me: Bahareh Changizi,
 This doctoral dissertation is dedicated to my parents to whom I am forever grateful for their love, support, and encouragement and to my husband Rory Michaelis for his love, support, and patience. He
 deserves the final acknowledgment as he suffered most from its completion.
 
+\input{ipadissertations2020}
 \end{document}
