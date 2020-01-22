@@ -553,10 +553,10 @@ Figure \ref{fig:fifo2ex}. CASM provides an explicit representation for the store
       \begin{figure}[!h]
 \centering
 		  \tikz{
-			\node[state, initial] (q) {\parbox[top][][c]{.5cm}{}};
-			\node[state, right of=q, node distance=5cm] (p) {\parbox[top][][c]{.5cm}{ $\ m$}};
-			\node[state, below of=q, node distance=3.5cm] (r) { $\ \ n\ \ $};
-			\node[state, right of=r, node distance=5cm] (s) { $\ m, \ n \ $};
+			\node[state, initial] (q) {\parbox[top][][c]{1cm}{$\ \ \ \ \ \ \ \ \ \ \ \ \ $}};
+			\node[state, right of=q, node distance=5cm] (p) {\parbox[top][][c]{1cm}{ $\ \ \ \ m\ \ \ \ $}};
+			\node[state, below of=q, node distance=3.5cm] (r) {\parbox[top][][c]{1cm} {$\ \ \ n\ \ \ $}};
+			\node[state, right of=r, node distance=5cm] (s) {\parbox[top][][c]{1cm}{ $\ m,\ n \ $}};
 			%transitions
 			\path[transition] (q) edge [loop above] node [left] {$\emptyset, true\ $} (q); 
 			\path[transition] (p) edge [loop right] node [right] {$\ \emptyset, true$} (p); 

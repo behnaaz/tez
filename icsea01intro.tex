@@ -17,7 +17,7 @@ Business Process Model and Notation (BPMN) \cite{BPMN20}, previously referred to
 Similar to many modeling languages, it is possible for a BPMN model to contain errors. Syntactical errors are created by connecting the modeling elements in an invalid manner. %For example, an event that has two outgoing edges rather than one.
  In general, syntactical errors can be detected simply by parsing the model \cite{deadlockbpmn}. A number of BPMN designing tools such as Eclipse BPMN Modeler \cite{BPMN2modeler}, ARIS Express \cite{arisexpress}, and Yaoqiang \cite{Yaoqiang} can detect syntactical errors in models. 
 
-However, a model may contain behavioral errors, which are more complicated to detect. For instance, a model may represent a process that is not \emph{sound}. A process is sound when every reachable state from an initial state has a way to reach a final state \cite{RPU+07}. A process may contain \emph{deadlock} or \emph{livelock}. Deadlocks occur when a process can reach a non-final state that it cannot leave. Livelocks happen when a process ends in one path, but some states are still active with no progress possible. Detecting behavioral errors requires investigating the runtime behavior of a process. An informal approach to finding cases of deadlock and livelock in BPMN models has been proposed in \cite{deadlockbpmn} \cite{livelock2gholoo}, which is based on finding the pre-defined patterns of such errors in the model. Though, the approach is of low computation efforts, it is not complete in term of finding other forms of errors. 
+However, a model may contain behavioral errors, which are more complicated to detect. For instance, a model may represent a process that is not \emph{sound}. A process is sound when every reachable state from an initial state has a way to reach a final state \cite{RPU+07}. A process may contain \emph{deadlock} or \emph{livelock}. Deadlocks occur when a process can reach a non-final state that it cannot leave. Livelocks happen when a process ends in one path, but some states are still active with no progress possible. Detecting behavioral errors requires investigating the runtime behavior of a process. An informal approach to finding cases of deadlock and livelock in BPMN models has been proposed in \cite{deadlockbpmn} \cite{livelock2gholoo}, which is based on finding the pre-defined patterns of such errors in the model. Although this approach has low computational costs, it is not complete in term of finding other forms of errors. 
 
 Formalizing semantics of a BPMN process enables automated model checking of the process in order to  detect behavioral errors. 
 \ 
@@ -51,15 +51,16 @@ However, the open-ended nature of Reo channels makes it necessary to extend the 
 
 Several dozen variations of semantic models for Reo have been proposed~\cite{sung30semantics}. They vary from rather simple that cover basic Reo behavior (e.g., constraint automata ~\cite{BaierCA}) to more complex models that capture specific behavioral aspects, e.g., context-sensitivity~\cite{coloring}. In some of these semantic models, computing the overall semantics of a system given automata-based semantics for its parts (components, services or glue code) is computationally expensive. This hampers using the language for analyzing large real-world business processes. 
 
-In this dissertation, we present a constraint-based framework, which unifies various formal semantics of Reo. In this framework, the behavior of a Reo network is described as a constraint satisfaction problem (CSP). A CSP is a problem whose solutions must satisfy some limitations also known as constraints. The constraint-based nature of our approach allows simultaneous coexistence of several semantics in a simple fashion. The behavior of a Reo network is determined by the solutions to its CSP. Since any solution should satisfy all the encoded formal semantics, the framework eliminated any inconsistent behavior between the Reo formal semantics.
+In this dissertation, we present a constraint-based framework, which unifies various formal semantics of Reo. In this framework, the behavior of a Reo network is described as a constraint satisfaction problem (CSP). A CSP is a problem whose solutions must satisfy some limitations also known as constraints. The constraint-based nature of our approach allows simultaneous coexistence of several semantics in a simple fashion. The behavior of a Reo network is determined by the solutions to its CSP. Since any solution must satisfy all the encoded formal semantics, the framework eliminates any behavior inconsistent with (an aspect of) a formal semantics of Reo.
 
-Another advantage of our proposed constraint-based approach compared to the existing approaches of calculating formal semantics of Reo is its efficiency due to efficient constraint solving methods and optimization techniques that is used in the off-the-shelf constraint solvers. We back up this claim with a case study.
+
+Another advantage of our proposed constraint-based approach compared to the existing approaches of deriving formal semantics of Reo is its efficiency due to efficient constraint solving methods and optimization techniques used in the off-the-shelf constraint solvers. We support this claim with a case study.
 %Despite the variety of the behavioral aspects that Reo and its existing formal semantics can express, an important concept in modeling workflow patterns thats is priority has not yet explicitly been officially supported. Priority is required, for instance, for modeling cancelable and compensatable tasks within transactional business processes. 
 
 Among the behavioral aspects required to model a business process is \emph{priority}. The notion of priority is necessary for modeling behaviors such as transaction and exception handling, where the data flow representing the error or exception should interrupt the normal flow. 
-A formal semantics to model priority in Reo, named Constraint Automata with Priority (CAP), has been proposed in \cite{priority}. CAP provides means to model propagation and stopping the propagation of priority. Despite its comprehensive approach in modeling priority, the proposed semantics is computationally expensive to be directly implemented. 
+A formal semantics to model priority in Reo, named Constraint Automata with Priority (CAP), has been proposed in \cite{priority}. CAP provides means to model propagation and stopping the propagation of priority. Despite its comprehensive approach in modeling priority, the proposed semantics is computationally expensive for direct implementation. 
 
-Inspired by CAP, in this dissertation, we present an alternative approach to model priority in Reo by extending our constraint-based framework with priority-aware premises. Further, we extend our priority-aware formal model to support not only binary notion of priority, as modeled in CAP, but also numeric priorities. %This is a useful extension as in literature e.g. ??TODO?? priority is often expressed as a number rather than a binary value.
+Inspired by CAP, in this dissertation, we present an alternative approach to model priority in Reo by extending our constraint-based framework with priority-aware premises. Further, we extend our priority-aware formal model to support not only a binary notion of priority, as modeled in CAP, but also numeric priorities. %This is a useful extension as in literature e.g. ??TODO?? priority is often expressed as a number rather than a binary value.
 %%%%%%%%%
 
 \section{Contributions}
@@ -87,7 +88,7 @@ The contributions of this dissertation are as follows:
 %
 %Our framework is a place for different formal semantics of Reo to coexist and to complement each other. Our framework is based on constraint satisfaction problem,
 %This is a generic and flexible way for encoding new behavioral models in the our framework. 
- This approach bridges the expressiveness gap and inconsistency among different Reo semantics. In addition, using a constraint-based approach replaces direct implementations of algorithms for calculating different Reo formal semantics.
+ This approach bridges the expressiveness gaps and incompatibility among different Reo semantics. In addition, using a constraint-based approach replaces direct implementations of algorithms for calculating different Reo formal semantics.
 %  off-the-shelf constraint solvers instead of direct implementation of custom algorithms to obtain semantics of Reo models. To mitigate inconsistency between behaviors described by different semantic models of Reo, we enforce the constraints of several formal semantics, which results into the behaviors that comply with all the semantics on the hand.
 
 \item We extend our constraint-based framework to support the priority-aware behavior of Reo connectors. Priority is an important concept in modeling transactions. Our work makes it  more straight-forward and less complicated to obtain Constraint Automata with Priority (CAP) formal semantics for Reo. %, which also takes data and context-sensitivity into consideration.
@@ -101,18 +102,19 @@ The contributions of this dissertation are as follows:
 The rest of this dissertation is organized as follows:
 
 \begin{itemize}
-\item In Chapter \ref{ch:bpmn}, we introduce BPMN 2 modeling elements and introduce an example of BPMN with problems. 
+\item In Chapter \ref{ch:bpmn}, we introduce BPMN 2 modeling elements and introduce an example of BPMN with problems. This chapter is based on the technical content of [1], listed in Section \ref{sec:pub}.
+ 
 
 \item Chapter \ref{ch:reo} provides an overview of the Reo coordination language. There, we describe the behavior of Reo primitives in an informal style.
 
-\item Chapter \ref{ch:formsem} overviews several formal semantics proposed for describing behavior of a Reo connector. The definitions of the semantics that are relevant to this work are given in details.
+\item Chapter \ref{ch:formsem} contains an overview of several formal semantic models proposed for describing behavior of a Reo connector. The definitions of the semantics that are relevant to this work are given in details.
 
 \item Chapter \ref{ch:mapping} describes our rule-based model-driven approach in transforming BPMN models to Reo connectors. %~\cite{bpmn}
 %ing Notation (BPMN),  Business Process Execution Language (BPEL)~\cite{bpel} and the most common Unified Modeling Language (UML) 2.0~\cite{uml} dynamic models: Activity diagrams and Sequence diagrams. We have also developed tools for automatic transformation of these models into Reo~\cite{behnaz}. This enables the use of Reo analysis methods and tools on the coordination protocols that originally were not expressed in Reo. 
 The transformation handles advanced BPMN elements, namely, transaction and compensation. 
 
 An obstacle in computing execution semantics of some BPMN models with high-level elements such as transaction is that their behavior is too complicated and elaborated to directly be mapped to constructions of a language used for verification. To tackle this issue, we suggest a refinement procedure to substitute such high-level constructs with a set of simpler elements that together deliver the same functionality. %The  yet each of them is  easier to be 
-This chapter is partially based on \cite{behnaz}.
+		This chapter is partially based on the technical content of [1], listed in Section \ref{sec:pub}.
  
 \item In Chapter \ref{chapterCASM}, we introduce our constraint-based framework to capture the formal semantics of Reo networks, given by two different formal semantics namely, Constraint Automata with State Memory (CASM) and Connector Coloring (CC) \cite{coloring}. CASM is an extension of Constraint Automata (CA), which is one of the most popular semantics for Reo. We favor using CASM over CA, which is a simpler semantics, because CASM provides a mechanism to model the state values. This helps in treating the states symbolically. Therefore, unlike CA every data-item entering a buffer does not lead to a new state. %, which leads to a more compact representation of the automata.
 
@@ -122,7 +124,8 @@ To capture context sensitivity, a behavioral aspect that CA and some of its exte
 We present a tool to generate CASMs from Reo networks in a compositional manner, where the part of behavior that is not compliant with CC is ruled out. 
 % A shortcoming of earlier work stems from its lack of support for data-dependent behavior. We overcome this shortcoming in the work we present in this chapter. Our tool is a necessary step for providing fully automated model checking for data-aware and context-sensitive composition of services coordinated by Reo.
 
-We employ highly optimized off-the-shelf constraint solvers instead of straight-forward custom algorithms for computing the semantics \cite{behconstraint}. We provide formal arguments to show the correctness of our approach. Then, we present an evaluation on the performance of our framework through a case study.
+We employ highly optimized off-the-shelf constraint solvers instead of straight-forward custom algorithms for computing the semantics \cite{behconstraint}. We provide formal arguments to show the correctness of our approach. Then, we present an evaluation on the performance of our framework through a case study. The technical content of [4], listed in Section \ref{sec:pub} is the basis of this chapter.
+
 %increasing performance using constraint satisfaction techniques; and
 %We explain each of these contributions in more detail below. Throughout
 %this thesis we support our statements both in theory and in practice. We give formal
@@ -134,12 +137,16 @@ We employ highly optimized off-the-shelf constraint solvers instead of straight-
 %We extends ideas behind Jose's constraint-based runtime engine for Reo to provide automated tools for %efficient??
 %calculating the behavior of Reo networks
 
-\item In Chapter \ref{ch:prio}, we extend our framework to support priority and its propagation through a Reo connector. We propose a constraint-based solution to replace the custom algorithm to calculate the priority-aware behavior of a Reo connector \cite{fsen19}. We first introduce a binary model of the priority and show how it can be encoded in our constraint-based framework, then we extend this solution to numeric priorities. We show the application of our model in a case study.
+\item In Chapter \ref{ch:prio}, we extend our framework to support priority and its propagation through a Reo connector. We propose a constraint-based solution to replace the custom algorithm to calculate the priority-aware behavior of a Reo connector \cite{fsen19}. We first introduce a binary model of priority and show how it can be encoded in our constraint-based framework. Subsequently, we extend this solution to numeric priorities. We show the application of our model in a case study. This chapter is based on the technical content of [5], listed in Section \ref{sec:pub}.
  %TODO refer to 
 %We also overview the Extensible Coordination Tools \cite{ect} and present our contribution to this .
 
 \item Chapter \ref{ch:concl} concludes this thesis and outlines future research directions. 
 \end{itemize}
+
+\section{Publications}
+\label{sec:pub}
+\input{publication}
 
 %This work is partially funded by the COMPAS \cite{compasproj}.% - Compliance-driven Models, Languages, and Architectures for Services (EU Framework 7 STREP project, Call 1, Theme ICT 1.1.2 Software and Services).% - Coordinator
 %In this dissertation, we address the following research problems:
